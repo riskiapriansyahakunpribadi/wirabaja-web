@@ -34,7 +34,7 @@ export const siteConfig = {
   businessField: 'Penjualan, penyewaan, servis, dan suku cadang alat berat',
   seoDescription:
     'PT Wirabaja Mesin Nusantara menyediakan penjualan, penyewaan, servis berkala, dan suku cadang alat berat untuk proyek konstruksi, pertambangan, perkebunan, dan infrastruktur di Indonesia.',
-  siteUrl: 'https://wirabaja.id',
+  siteUrl: 'https://wirabaja-web.vercel.app/',
   locale: 'id_ID',
 
   address: {

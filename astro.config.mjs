@@ -9,7 +9,7 @@ import tailwindcss from '@tailwindcss/vite';
  * CARA: ganti 'https://wirabaja.id' dengan domain aktif perusahaan (harus diawali https:// tanpa garis miring di akhir).
  */
 export default defineConfig({
-  site: 'https://wirabaja.id',
+  site: 'https://wirabaja-web.vercel.app/',
   output: 'static',
   compressHTML: true,
   integrations: [

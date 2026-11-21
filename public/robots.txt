@@ -5,4 +5,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://wirabaja.id/sitemap-index.xml
+Sitemap: https://wirabaja-web.vercel.app/
