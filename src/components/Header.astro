@@ -1,0 +1,341 @@
+---
+import { siteConfig, buildWhatsAppUrl } from '@/config/site';
+import BrandLogo from './BrandLogo.astro';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  transparent?: boolean;
+}
+
+const { transparent = false } = Astro.props;
+
+// Menormalkan pathname agar penanda halaman aktif tetap tepat baik dengan maupun tanpa garis miring akhir.
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+
+function isActivePath(href: string): boolean {
+  const normalizedHref = href.replace(/\/+$/, '') || '/';
+  if (normalizedHref === '/') {
+    return currentPath === '/';
+  }
+  return currentPath === normalizedHref || currentPath.startsWith(`${normalizedHref}/`);
+}
+
+const whatsappUrl = buildWhatsAppUrl();
+---
+
+{/* Pada halaman dalam, bar atas diletakkan di luar header sticky agar tergulung alami tanpa mengubah tinggi header */}
+{!transparent && (
+  <div class="hidden border-b border-white/15 bg-steel-980 text-xs text-steel-muted md:block">
+    <div class="container-wide flex min-h-[38px] items-center justify-between gap-4">
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-1">
+        <a
+          href={siteConfig.address.mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 py-1 text-steel-muted transition-colors hover:text-white"
+        >
+          <Icon name="map-pin" size={14} class="text-safety" />
+          <span>{siteConfig.address.short}</span>
+        </a>
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 py-1 text-steel-muted transition-colors hover:text-white"
+        >
+          <Icon name="phone" size={14} class="text-safety" />
+          <span>{siteConfig.contact.whatsappDisplay}</span>
+        </a>
+        <a
+          href={`mailto:${siteConfig.contact.email}`}
+          class="hidden items-center gap-1.5 py-1 text-steel-muted transition-colors hover:text-white lg:inline-flex"
+        >
+          <Icon name="mail" size={14} class="text-safety" />
+          <span>{siteConfig.contact.email}</span>
+        </a>
+      </div>
+
+      <div
+        class="inline-flex shrink-0 items-center gap-1.5 bg-safety px-4 py-1.5 font-semibold text-steel-950"
+        style="clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);"
+      >
+        <Icon name="clock" size={14} />
+        <span>{siteConfig.hours.compact}</span>
+      </div>
+    </div>
+  </div>
+)}
+
+<header
+  data-site-header
+  data-transparent={transparent ? 'true' : 'false'}
+  data-scrolled="false"
+  transition:name="site-header"
+  transition:animate="none"
+  class:list={[
+    'site-header z-40 w-full transition-colors duration-300',
+    transparent ? 'fixed top-0 left-0 right-0' : 'sticky top-0 bg-steel-950',
+  ]}
+>
+  {/* Pada Beranda (header fixed), bar atas ikut di dalam header dan melipat halus saat halaman digulir */}
+  {transparent && (
+    <div
+      data-topbar
+      class="topbar-fixed hidden border-b border-white/15 bg-steel-980 text-xs text-steel-muted md:block"
+    >
+      <div class="container-wide flex min-h-[38px] items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-1">
+          <a
+            href={siteConfig.address.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 py-1 text-steel-muted transition-colors hover:text-white"
+          >
+            <Icon name="map-pin" size={14} class="text-safety" />
+            <span>{siteConfig.address.short}</span>
+          </a>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 py-1 text-steel-muted transition-colors hover:text-white"
+          >
+            <Icon name="phone" size={14} class="text-safety" />
+            <span>{siteConfig.contact.whatsappDisplay}</span>
+          </a>
+          <a
+            href={`mailto:${siteConfig.contact.email}`}
+            class="hidden items-center gap-1.5 py-1 text-steel-muted transition-colors hover:text-white lg:inline-flex"
+          >
+            <Icon name="mail" size={14} class="text-safety" />
+            <span>{siteConfig.contact.email}</span>
+          </a>
+        </div>
+
+        <div
+          class="inline-flex shrink-0 items-center gap-1.5 bg-safety px-4 py-1.5 font-semibold text-steel-950"
+          style="clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);"
+        >
+          <Icon name="clock" size={14} />
+          <span>{siteConfig.hours.compact}</span>
+        </div>
+      </div>
+    </div>
+  )}
+
+  <div data-header-bar class="header-bar transition-all duration-300">
+    <div class="container-wide flex min-h-[72px] items-center justify-between gap-4 py-3">
+      <a
+        href="/"
+        class="logo-link shrink-0 py-1"
+        aria-label={`${siteConfig.legalName}, kembali ke Beranda`}
+      >
+        <BrandLogo variant="dark" />
+      </a>
+
+      <nav aria-label="Navigasi utama" class="hidden items-center gap-6 xl:gap-7 lg:flex">
+        {siteConfig.navigation.map((item) => {
+          const active = isActivePath(item.href);
+          return (
+            <a
+              href={item.href}
+              aria-current={active ? 'page' : undefined}
+              class:list={[
+                'nav-link',
+                active ? 'text-white' : 'text-steel-muted hover:text-white',
+              ]}
+            >
+              {item.label}
+            </a>
+          );
+        })}
+      </nav>
+
+      <div class="hidden items-center gap-3 lg:flex">
+        <Button
+          href={siteConfig.headerCta.href}
+          variant="primary"
+          size="sm"
+          icon="arrow-right"
+          pulseOnce={true}
+          magnetic={true}
+        >
+          {siteConfig.headerCta.label}
+        </Button>
+      </div>
+
+      <button
+        type="button"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-nav-drawer"
+        aria-label="Buka menu navigasi"
+        class="inline-flex h-12 w-12 items-center justify-center rounded-[4px] border border-white/25 bg-steel-950/60 text-white transition-colors hover:border-safety hover:text-safety lg:hidden"
+      >
+        <Icon name="menu" size={24} />
+      </button>
+    </div>
+  </div>
+</header>
+
+<div
+  data-menu-backdrop
+  hidden
+  class="fixed inset-0 z-50 bg-steel-980/75 opacity-0 transition-opacity duration-300 lg:hidden"
+  aria-hidden="true"
+></div>
+
+<aside
+  id="mobile-nav-drawer"
+  data-menu-drawer
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menu navigasi ponsel"
+  hidden
+  class="mobile-drawer fixed top-0 right-0 bottom-0 z-50 flex w-full max-w-[340px] translate-x-full flex-col bg-steel-950 text-white shadow-2xl transition-transform duration-300 lg:hidden"
+>
+  <div class="flex items-center justify-between border-b border-white/15 px-5 py-4">
+    <a
+      href="/"
+      class="logo-link"
+      aria-label={`${siteConfig.legalName}, kembali ke Beranda`}
+    >
+      <BrandLogo variant="dark" class="h-9" />
+    </a>
+    <button
+      type="button"
+      data-menu-close
+      aria-label="Tutup menu navigasi"
+      class="inline-flex h-11 w-11 items-center justify-center rounded-[4px] border border-white/25 text-white transition-colors hover:border-safety hover:text-safety"
+    >
+      <Icon name="close" size={22} />
+    </button>
+  </div>
+
+  <nav aria-label="Navigasi ponsel" class="flex-1 overflow-y-auto px-5 py-6">
+    <ul class="m-0 flex list-none flex-col gap-1 p-0">
+      {siteConfig.navigation.map((item, index) => {
+        const active = isActivePath(item.href);
+        return (
+          <li
+            class="mobile-nav-item"
+            style={`--item-delay: ${index * 45}ms;`}
+          >
+            <a
+              href={item.href}
+              aria-current={active ? 'page' : undefined}
+              class:list={[
+                'flex min-h-[48px] items-center justify-between rounded-[4px] border-l-4 px-3.5 font-display text-xl font-bold uppercase tracking-wide transition-colors',
+                active
+                  ? 'border-safety bg-steel-900 text-white'
+                  : 'border-transparent text-steel-muted hover:border-safety/70 hover:bg-steel-900/60 hover:text-white',
+              ]}
+            >
+              <span>{item.label}</span>
+              <Icon name="arrow-right" size={16} class={active ? 'text-safety' : 'text-steel-muted/70'} />
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+
+    <div class="mt-6 border-t border-white/15 pt-6">
+      <Button
+        href={siteConfig.headerCta.href}
+        variant="primary"
+        icon="arrow-right"
+        class="w-full justify-between"
+      >
+        {siteConfig.headerCta.label}
+      </Button>
+    </div>
+
+    <div class="mt-6 space-y-3 border-t border-white/15 pt-5 text-sm text-steel-muted">
+      <div class="flex items-start gap-2.5">
+        <Icon name="map-pin" size={16} class="mt-0.5 shrink-0 text-safety" />
+        <span>{siteConfig.address.full}</span>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <Icon name="clock" size={16} class="shrink-0 text-safety" />
+        <span>{siteConfig.hours.label}</span>
+      </div>
+      <div class="flex flex-col gap-2 pt-1">
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-[44px] items-center gap-2.5 text-white hover:text-safety"
+        >
+          <Icon name="whatsapp" size={16} class="shrink-0 text-safety" />
+          <span>{siteConfig.contact.whatsappDisplay}</span>
+        </a>
+        <a
+          href={`mailto:${siteConfig.contact.email}`}
+          class="inline-flex min-h-[44px] items-center gap-2.5 text-white hover:text-safety"
+        >
+          <Icon name="mail" size={16} class="shrink-0 text-safety" />
+          <span>{siteConfig.contact.email}</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+</aside>
+
+<style>
+  .site-header[data-transparent='true'][data-scrolled='false'] .header-bar {
+    background: linear-gradient(180deg, rgba(7, 21, 40, 0.72) 0%, rgba(11, 31, 58, 0.18) 100%);
+  }
+
+  .site-header[data-scrolled='true'] .header-bar {
+    background-color: rgba(11, 31, 58, 0.97);
+    box-shadow: 0 10px 28px rgba(7, 21, 40, 0.34);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  /* Penyusutan tinggi hanya berlaku pada header fixed di Beranda agar halaman dalam tidak mengalami loncatan layout */
+  .site-header[data-transparent='true'][data-scrolled='true'] .header-bar > div {
+    min-height: 62px;
+    padding-block: 0.45rem;
+  }
+
+  .topbar-fixed {
+    max-height: 44px;
+    opacity: 1;
+    overflow: hidden;
+    transition:
+      max-height 240ms var(--ease-industrial),
+      opacity 200ms var(--ease-industrial),
+      border-color 200ms var(--ease-industrial);
+  }
+
+  .site-header[data-transparent='true'][data-scrolled='true'] .topbar-fixed {
+    max-height: 0;
+    opacity: 0;
+    border-bottom-color: transparent;
+  }
+
+  .mobile-drawer[data-open='true'] {
+    transform: translateX(0);
+  }
+
+  .mobile-drawer .mobile-nav-item {
+    opacity: 0;
+    transform: translateX(16px);
+    transition:
+      opacity 260ms var(--ease-industrial) var(--item-delay, 0ms),
+      transform 260ms var(--ease-industrial) var(--item-delay, 0ms);
+  }
+
+  .mobile-drawer[data-open='true'] .mobile-nav-item {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-drawer .mobile-nav-item {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

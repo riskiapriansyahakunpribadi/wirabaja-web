@@ -1,0 +1,27 @@
+---
+import { buildWhatsAppUrl, siteConfig } from '@/config/site';
+import Icon from './Icon.astro';
+
+const whatsappUrl = buildWhatsAppUrl();
+---
+
+<a
+  href={whatsappUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`Chat Tim Penjualan ${siteConfig.shortName} lewat WhatsApp`}
+  class="wa-float fixed right-4 bottom-4 z-30 inline-block bg-safety p-[2px] shadow-lg transition-transform duration-200 hover:-translate-y-0.5 active:scale-95 sm:right-6 sm:bottom-6"
+  style="clip-path: polygon(0 0, calc(100% - 13px) 0, 100% 13px, 100% 100%, 0 100%);"
+>
+  <span
+    class="inline-flex min-h-[48px] min-w-[48px] items-center gap-2.5 bg-steel-950 px-3 py-2 text-white transition-colors duration-200 hover:bg-steel-900 sm:px-3.5"
+    style="clip-path: polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 0 100%);"
+  >
+    <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] bg-safety text-steel-950">
+      <Icon name="whatsapp" size={20} />
+    </span>
+    <span class="hidden pr-1 font-display text-base font-bold uppercase tracking-wide sm:inline">
+      Chat Tim Penjualan
+    </span>
+  </span>
+</a>

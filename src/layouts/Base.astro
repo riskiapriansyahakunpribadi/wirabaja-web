@@ -1,0 +1,119 @@
+﻿---
+import { ClientRouter } from 'astro:transitions';
+import { siteConfig } from '@/config/site';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import WhatsAppFloat from '@/components/WhatsAppFloat.astro';
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  transparentHeader?: boolean;
+  isHome?: boolean;
+  ogImage?: string;
+  ogImageAlt?: string;
+  noindex?: boolean;
+  structuredData?: Record<string, unknown>;
+}
+
+const {
+  title,
+  description = siteConfig.seoDescription,
+  transparentHeader = false,
+  isHome = false,
+  ogImage = '/images/hero-excavator.jpg',
+  ogImageAlt = `Foto alat berat ${siteConfig.legalName}`,
+  noindex = false,
+  structuredData,
+} = Astro.props;
+
+const pageTitle = isHome
+  ? `${siteConfig.legalName} | ${siteConfig.tagline}`
+  : `${title} | ${siteConfig.legalName}`;
+
+const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
+const ogImageUrl = new URL(ogImage, siteConfig.siteUrl).toString();
+
+// Data terstruktur Organization hanya mengambil data resmi dari src/config/site.ts.
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: siteConfig.legalName,
+  alternateName: siteConfig.shortName,
+  url: siteConfig.siteUrl,
+  logo: new URL('/logo/logo-lengkap.svg', siteConfig.siteUrl).toString(),
+  description: siteConfig.seoDescription,
+  email: siteConfig.contact.email,
+  telephone: siteConfig.contact.whatsappDisplay,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: siteConfig.address.street,
+    addressLocality: siteConfig.address.city,
+    addressRegion: siteConfig.address.province,
+    postalCode: siteConfig.address.postalCode,
+    addressCountry: 'ID',
+  },
+  sameAs: siteConfig.social.map((item) => item.href),
+};
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0B1F3A" />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={siteConfig.locale} />
+    <meta property="og:site_name" content={siteConfig.legalName} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+    {structuredData && (
+      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    )}
+
+    <ClientRouter />
+  </head>
+  <body>
+    <a href="#konten-utama" class="skip-link">Lewati ke konten utama</a>
+
+    <Header transparent={transparentHeader} />
+
+    <main
+      id="konten-utama"
+      tabindex="-1"
+      transition:name="main-content"
+      class="focus:outline-none"
+    >
+      <slot />
+    </main>
+
+    <Footer />
+    <WhatsAppFloat />
+
+    <script>
+      import '@/scripts/header';
+      import '@/scripts/reveal';
+      import '@/scripts/interactions';
+    </script>
+  </body>
+</html>

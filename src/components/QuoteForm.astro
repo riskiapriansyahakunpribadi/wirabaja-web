@@ -1,0 +1,275 @@
+---
+import { products } from '@/data/products';
+import { siteConfig } from '@/config/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  defaultUnit?: string;
+  defaultNeed?: 'Beli' | 'Sewa' | 'Servis' | 'Suku Cadang';
+  heading?: string;
+  subtitle?: string;
+  idPrefix?: string;
+}
+
+/*
+ * UBAH: judul formulir, teks penjelas, kebutuhan bawaan, dan nama unit bawaan lewat props.
+ * EFEK: dipakai ulang di halaman Kontak dan seluruh halaman Detail Produk.
+ * CARA: pasang <QuoteForm defaultUnit="Excavator Kelas 20 Ton" defaultNeed="Beli" /> pada halaman Astro.
+ */
+const {
+  defaultUnit = '',
+  defaultNeed = 'Beli',
+  heading = 'Formulir Permintaan Penawaran',
+  subtitle = 'Isi data kebutuhan proyek di bawah ini, lalu pilih kirim lewat WhatsApp atau Email. Pesan akan tersusun rapi secara otomatis.',
+  idPrefix = 'quote',
+} = Astro.props;
+
+const needs: ('Beli' | 'Sewa' | 'Servis' | 'Suku Cadang')[] = [
+  'Beli',
+  'Sewa',
+  'Servis',
+  'Suku Cadang',
+];
+
+const unitOptions = products.map((item) => item.name);
+---
+
+<section
+  id="form-penawaran"
+  aria-labelledby={`${idPrefix}-heading`}
+  class="rounded-[4px] border border-border-light border-t-4 border-t-safety bg-surface-white p-6 shadow-sm sm:p-8"
+>
+  <div class="mb-6 border-b border-border-light pb-5">
+    <p class="section-kicker section-kicker-light">Permintaan Penawaran</p>
+    <h2 id={`${idPrefix}-heading`} class="text-steel-950">
+      {heading}
+    </h2>
+    <p class="mt-2 text-sm leading-relaxed text-steel-gray">
+      {subtitle}
+    </p>
+  </div>
+
+  <form data-quote-form novalidate class="space-y-5">
+    <!-- Kolom jebakan anti-spam tersembunyi dari pengunjung -->
+    <div class="hp-field" aria-hidden="true">
+      <label for={`${idPrefix}-company-url`}>Situs Web</label>
+      <input
+        id={`${idPrefix}-company-url`}
+        name="website_perusahaan"
+        type="text"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div class="field-group">
+        <input
+          id={`${idPrefix}-nama`}
+          name="nama"
+          type="text"
+          required
+          maxlength="80"
+          autocomplete="name"
+          placeholder=" "
+          class="field-input"
+          aria-describedby={`${idPrefix}-nama-error`}
+        />
+        <label for={`${idPrefix}-nama`} class="field-label">
+          Nama Lengkap *
+        </label>
+        <span id={`${idPrefix}-nama-error`} data-error-for="nama" class="field-error"></span>
+      </div>
+
+      <div class="field-group">
+        <input
+          id={`${idPrefix}-perusahaan`}
+          name="perusahaan"
+          type="text"
+          required
+          maxlength="100"
+          autocomplete="organization"
+          placeholder=" "
+          class="field-input"
+          aria-describedby={`${idPrefix}-perusahaan-error`}
+        />
+        <label for={`${idPrefix}-perusahaan`} class="field-label">
+          Nama Perusahaan / Proyek *
+        </label>
+        <span id={`${idPrefix}-perusahaan-error`} data-error-for="perusahaan" class="field-error"></span>
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div class="field-group">
+        <input
+          id={`${idPrefix}-telepon`}
+          name="telepon"
+          type="tel"
+          required
+          maxlength="25"
+          autocomplete="tel"
+          inputmode="tel"
+          placeholder=" "
+          class="field-input"
+          aria-describedby={`${idPrefix}-telepon-error`}
+        />
+        <label for={`${idPrefix}-telepon`} class="field-label">
+          Nomor Telepon / WhatsApp *
+        </label>
+        <span id={`${idPrefix}-telepon-error`} data-error-for="telepon" class="field-error"></span>
+      </div>
+
+      <div class="field-group">
+        <input
+          id={`${idPrefix}-email`}
+          name="email"
+          type="email"
+          required
+          maxlength="120"
+          autocomplete="email"
+          placeholder=" "
+          class="field-input"
+          aria-describedby={`${idPrefix}-email-error`}
+        />
+        <label for={`${idPrefix}-email`} class="field-label">
+          Alamat Email *
+        </label>
+        <span id={`${idPrefix}-email-error`} data-error-for="email" class="field-error"></span>
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div class="field-group">
+        <select
+          id={`${idPrefix}-kebutuhan`}
+          name="kebutuhan"
+          required
+          class="field-input pr-10"
+          aria-describedby={`${idPrefix}-kebutuhan-error`}
+        >
+          {needs.map((item) => (
+            <option value={item} selected={item === defaultNeed}>
+              {item}
+            </option>
+          ))}
+        </select>
+        <label for={`${idPrefix}-kebutuhan`} class="field-label">
+          Jenis Kebutuhan *
+        </label>
+        <span id={`${idPrefix}-kebutuhan-error`} data-error-for="kebutuhan" class="field-error"></span>
+      </div>
+
+      <div class="field-group">
+        <input
+          id={`${idPrefix}-unit`}
+          name="unit"
+          type="text"
+          required
+          maxlength="120"
+          list={`${idPrefix}-unit-list`}
+          value={defaultUnit}
+          placeholder=" "
+          class="field-input"
+          aria-describedby={`${idPrefix}-unit-error`}
+        />
+        <label for={`${idPrefix}-unit`} class="field-label">
+          Unit yang Diminati *
+        </label>
+        <datalist id={`${idPrefix}-unit-list`}>
+          {unitOptions.map((unitName) => (
+            <option value={unitName} />
+          ))}
+        </datalist>
+        <span id={`${idPrefix}-unit-error`} data-error-for="unit" class="field-error"></span>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <input
+        id={`${idPrefix}-lokasi`}
+        name="lokasi"
+        type="text"
+        required
+        maxlength="120"
+        placeholder=" "
+        class="field-input"
+        aria-describedby={`${idPrefix}-lokasi-error`}
+      />
+      <label for={`${idPrefix}-lokasi`} class="field-label">
+        Lokasi Proyek (Kota / Kabupaten, Provinsi) *
+      </label>
+      <span id={`${idPrefix}-lokasi-error`} data-error-for="lokasi" class="field-error"></span>
+    </div>
+
+    <div class="field-group">
+      <textarea
+        id={`${idPrefix}-pesan`}
+        name="pesan"
+        rows="4"
+        required
+        maxlength="800"
+        placeholder=" "
+        class="field-input min-h-[124px] resize-y pt-6"
+        aria-describedby={`${idPrefix}-pesan-error`}
+      ></textarea>
+      <label for={`${idPrefix}-pesan`} class="field-label">
+        Rincian Kebutuhan (jumlah unit, durasi sewa, atau jadwal kirim) *
+      </label>
+      <span id={`${idPrefix}-pesan-error`} data-error-for="pesan" class="field-error"></span>
+    </div>
+
+    <!-- Kotak status validasi, proses, atau keberhasilan -->
+    <div
+      data-form-status
+      role="status"
+      aria-live="polite"
+      hidden
+      class="rounded-[4px] border p-4 text-sm leading-relaxed"
+    >
+      <p data-status-title class="font-bold"></p>
+      <p data-status-body class="mt-1"></p>
+      <a
+        data-status-fallback
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        hidden
+        class="mt-3 inline-flex min-h-[44px] items-center gap-2 font-display text-sm font-bold uppercase tracking-wide underline underline-offset-4"
+      >
+        <span data-status-fallback-label>Buka Tautan Pengiriman</span>
+        <Icon name="external" size={14} />
+      </a>
+    </div>
+
+    <div class="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
+      <button
+        type="button"
+        data-submit-channel="whatsapp"
+        data-btn-ripple="true"
+        class="btn btn-primary flex-1 justify-center"
+      >
+        <Icon name="whatsapp" size={18} class="btn-icon" />
+        <span data-btn-label>Kirim lewat WhatsApp</span>
+      </button>
+
+      <button
+        type="button"
+        data-submit-channel="email"
+        data-btn-ripple="true"
+        class="btn btn-dark flex-1 justify-center"
+      >
+        <Icon name="mail" size={18} class="btn-icon" />
+        <span data-btn-label>Kirim lewat Email</span>
+      </button>
+    </div>
+
+    <p class="text-xs leading-relaxed text-steel-gray">
+      Data yang Anda isi langsung dikirim ke WhatsApp ({siteConfig.contact.whatsappDisplay}) atau email resmi ({siteConfig.contact.email}) tanpa disimpan di server pihak ketiga.
+    </p>
+  </form>
+</section>
+
+<script>
+  import '@/scripts/quote-form';
+</script>

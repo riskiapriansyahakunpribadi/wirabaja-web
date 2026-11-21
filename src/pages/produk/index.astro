@@ -1,0 +1,266 @@
+---
+import Base from '@/layouts/Base.astro';
+import Button from '@/components/Button.astro';
+import CtaBanner from '@/components/CtaBanner.astro';
+import Icon from '@/components/Icon.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import { productCategories, products } from '@/data/products';
+
+const totalUnits = products.length;
+const newUnitsCount = products.filter((item) => item.status === 'Baru').length;
+const usedUnitsCount = products.filter((item) => item.status === 'Bekas').length;
+---
+
+<Base
+  title="Katalog Produk Alat Berat"
+  description="Daftar unit alat berat baru dan bekas siap kerja dari PT Wirabaja Mesin Nusantara: excavator, bulldozer, wheel loader, dump truck, motor grader, dan compactor."
+>
+  <!-- Kepala halaman katalog berlatar biru baja -->
+  <section class="relative overflow-hidden bg-steel-950 py-14 text-white lg:py-18">
+    <div
+      class="pointer-events-none absolute top-0 right-0 hidden h-full w-[28%] bg-safety/12 lg:block"
+      style="clip-path: polygon(22% 0, 100% 0, 100% 100%, 0 100%);"
+      aria-hidden="true"
+    ></div>
+
+    <div class="container-wide relative z-10">
+      <nav aria-label="Jejak halaman" class="mb-4 text-xs font-semibold uppercase tracking-wider text-steel-muted">
+        <ol class="m-0 flex list-none flex-wrap items-center gap-2 p-0">
+          <li><a href="/" class="text-steel-muted hover:text-safety">Beranda</a></li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" class="text-safety">Produk</li>
+        </ol>
+      </nav>
+
+      <div class="grid items-end gap-8 lg:grid-cols-[1.3fr_auto]">
+        <div class="max-w-2xl">
+          <p class="section-kicker section-kicker-dark">Katalog Unit Tersedia</p>
+          <h1 class="text-white">
+            Unit Alat Berat Baru dan Bekas Siap Kerja
+          </h1>
+          <p class="mt-4 text-base leading-relaxed text-steel-muted">
+            Saring unit berdasarkan kategori pekerjaan, kondisi unit, atau cari kelas tonase yang Anda butuhkan. Seluruh unit tersedia untuk pembelian maupun penyewaan sesuai jadwal proyek.
+          </p>
+        </div>
+
+        <dl class="m-0 grid grid-cols-3 gap-4 border border-white/15 bg-steel-900/80 px-5 py-4">
+          <div>
+            <dt class="text-xs uppercase tracking-wide text-steel-muted">Total Unit</dt>
+            <dd class="m-0 mt-1 font-display text-2xl font-extrabold text-safety">{totalUnits}</dd>
+          </div>
+          <div>
+            <dt class="text-xs uppercase tracking-wide text-steel-muted">Unit Baru</dt>
+            <dd class="m-0 mt-1 font-display text-2xl font-extrabold text-white">{newUnitsCount}</dd>
+          </div>
+          <div>
+            <dt class="text-xs uppercase tracking-wide text-steel-muted">Unit Bekas</dt>
+            <dd class="m-0 mt-1 font-display text-2xl font-extrabold text-white">{usedUnitsCount}</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- Area filter dan daftar produk -->
+  <section
+    aria-label="Daftar katalog alat berat"
+    data-catalog-root
+    class="section-pad bg-surface-warm"
+  >
+    <div class="container-wide">
+      <!-- Panel kontrol filter kategori, status, dan pencarian -->
+      <div class="rounded-[4px] border border-border-light bg-surface-white p-5 shadow-sm sm:p-6">
+        <div class="flex flex-col gap-5">
+          <!-- Baris 1: Pencarian dan filter status kondisi -->
+          <div class="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div class="relative">
+              <label for="catalog-search-input" class="sr-only">
+                Cari nama unit, kategori, atau spesifikasi
+              </label>
+              <span class="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-steel-gray">
+                <Icon name="search" size={18} />
+              </span>
+              <input
+                id="catalog-search-input"
+                type="search"
+                data-catalog-search
+                maxlength="80"
+                placeholder="Cari unit, misalnya Excavator 20 Ton, Loader 3 m³, atau Ripper"
+                class="min-h-[48px] w-full rounded-[4px] border border-border-input bg-surface-white py-2.5 pr-12 pl-11 text-sm text-steel-950 placeholder:text-steel-gray focus:border-steel-950 focus:outline-none focus:ring-2 focus:ring-safety"
+              />
+              <button
+                type="button"
+                data-search-clear
+                hidden
+                aria-label="Hapus kata kunci pencarian"
+                class="absolute top-1/2 right-2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-[4px] text-steel-gray hover:bg-surface-warm hover:text-steel-950"
+              >
+                <Icon name="close" size={16} />
+              </button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Saring berdasarkan kondisi unit">
+              <span class="mr-1 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-steel-gray">
+                <Icon name="filter" size={14} />
+                <span>Kondisi:</span>
+              </span>
+              <button
+                type="button"
+                data-filter-status="semua"
+                data-active="true"
+                aria-pressed="true"
+                class="filter-chip"
+              >
+                Semua
+              </button>
+              <button
+                type="button"
+                data-filter-status="baru"
+                data-active="false"
+                aria-pressed="false"
+                class="filter-chip"
+              >
+                Baru ({newUnitsCount})
+              </button>
+              <button
+                type="button"
+                data-filter-status="bekas"
+                data-active="false"
+                aria-pressed="false"
+                class="filter-chip"
+              >
+                Bekas ({usedUnitsCount})
+              </button>
+            </div>
+          </div>
+
+          <!-- Baris 2: Tombol kategori alat berat -->
+          <div
+            class="flex flex-wrap items-center gap-2 border-t border-border-light pt-4"
+            role="group"
+            aria-label="Saring berdasarkan kategori alat berat"
+          >
+            <button
+              type="button"
+              data-filter-category="semua"
+              data-category-label="Semua Kategori"
+              data-active="true"
+              aria-pressed="true"
+              class="filter-tab"
+            >
+              Semua Kategori ({totalUnits})
+            </button>
+
+            {productCategories.map((cat) => {
+              const count = products.filter((item) => item.category === cat.slug).length;
+              return (
+                <button
+                  type="button"
+                  data-filter-category={cat.slug}
+                  data-category-label={cat.name}
+                  data-active="false"
+                  aria-pressed="false"
+                  class="filter-tab"
+                >
+                  {cat.name} ({count})
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <!-- Informasi jumlah hasil aktif -->
+      <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+        <p data-catalog-count aria-live="polite" class="text-sm font-semibold text-steel-950">
+          Menampilkan {totalUnits} dari {totalUnits} unit tersedia
+        </p>
+        <p class="text-xs text-steel-gray">
+          Harga menyesuaikan spesifikasi attachment, lokasi kirim, dan opsi beli atau sewa.
+        </p>
+      </div>
+
+      <!-- Daftar kartu unit -->
+      <div class="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {products.map((product) => (
+          <ProductCard product={product} />
+        ))}
+      </div>
+
+      <!-- Keadaan kosong saat pencarian atau filter tidak menemukan unit -->
+      <div
+        data-catalog-empty
+        hidden
+        class="mt-8 rounded-[4px] border-2 border-dashed border-border-input bg-surface-white px-6 py-12 text-center"
+      >
+        <span class="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-[4px] bg-steel-950 text-safety">
+          <Icon name="search" size={26} />
+        </span>
+        <h2 class="mt-4 text-3xl text-steel-950">Unit Belum Ditemukan</h2>
+        <p data-empty-reason class="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-steel-gray">
+          Tidak ada unit yang cocok dengan gabungan filter saat ini.
+        </p>
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <button type="button" data-catalog-reset class="btn btn-primary btn-sm">
+            Tampilkan Semua Unit
+          </button>
+          <Button href="/kontak" variant="outline-dark" size="sm" icon="arrow-right">
+            Tanya Ketersediaan Unit Lain
+          </Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner
+    heading="Butuh Kelas Kapasitas atau Attachment Khusus?"
+    description="Jika proyek Anda memerlukan excavator long reach, rock breaker, atau konfigurasi bak khusus, sampaikan ke tim penjualan kami untuk pengecekan stok di yard."
+  />
+
+  <script>
+    import '@/scripts/catalog-filter';
+  </script>
+</Base>
+
+<style>
+  .filter-tab,
+  .filter-chip {
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--color-border-light);
+    background-color: var(--color-surface-warm);
+    color: var(--color-steel-950);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    transition:
+      background-color var(--duration-fast) var(--ease-industrial),
+      border-color var(--duration-fast) var(--ease-industrial),
+      color var(--duration-fast) var(--ease-industrial);
+  }
+
+  .filter-tab:hover,
+  .filter-chip:hover {
+    border-color: var(--color-steel-950);
+    background-color: var(--color-surface-tint);
+  }
+
+  .filter-tab[data-active='true'],
+  .filter-chip[data-active='true'] {
+    border-color: var(--color-steel-950);
+    background-color: var(--color-steel-950);
+    color: var(--color-surface-white);
+    box-shadow: inset 0 -3px 0 var(--color-safety);
+  }
+
+  :global(.catalog-card) {
+    transition:
+      opacity 260ms var(--ease-industrial),
+      transform 260ms var(--ease-industrial),
+      border-color var(--duration-base) var(--ease-industrial),
+      box-shadow var(--duration-base) var(--ease-industrial);
+  }
+</style>

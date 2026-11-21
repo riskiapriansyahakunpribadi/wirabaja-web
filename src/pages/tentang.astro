@@ -1,0 +1,443 @@
+﻿---
+import Base from '@/layouts/Base.astro';
+import Button from '@/components/Button.astro';
+import CtaBanner from '@/components/CtaBanner.astro';
+import Icon from '@/components/Icon.astro';
+import Reveal from '@/components/Reveal.astro';
+import { siteConfig } from '@/config/site';
+import type { IconName } from '@/types/icon';
+
+/*
+ * UBAH: nilai kerja perusahaan yang tampil pada halaman Tentang Kami.
+ * EFEK: memperbarui empat prinsip kerja pada bagian Nilai Kerja di /tentang.
+ * CARA: ubah judul atau uraian di dalam objek berikut sesuai budaya operasional perusahaan.
+ */
+const workValues = [
+  {
+    number: '01',
+    title: 'Pemeriksaan Terbuka Sebelum Serah Terima',
+    description:
+      'Setiap unit baru maupun bekas diperiksa tekanan hidrolik, mesin, serta rangka bawahnya di yard. Calon pembeli dan penyewa dapat melihat catatan pengecekan dan menguji unit langsung sebelum sepakat.',
+  },
+  {
+    number: '02',
+    title: 'Spesifikasi Menyesuaikan Medan Kerja',
+    description:
+      'Kami merekomendasikan kelas tonase, jenis bucket, dan lebar track shoe berdasarkan kondisi tanah serta target volume proyek Anda, bukan sekadar menawarkan unit berkapasitas terbesar.',
+  },
+  {
+    number: '03',
+    title: 'Kejelasan Jadwal dan Dokumen',
+    description:
+      'Setiap penawaran merinci kondisi unit, kelengkapan attachment, estimasi pengiriman, dan ruang lingkup perawatan secara tertulis sejak awal agar tim proyek tidak menghadapi biaya tak terduga.',
+  },
+  {
+    number: '04',
+    title: 'Tanggung Jawab Setelah Unit Tiba',
+    description:
+      'Hubungan kerja berlanjut sesudah alat turun dari trailer. Tim workshop dan gudang suku cadang mendukung perawatan berkala serta pengiriman komponen pengganti selama alat beroperasi.',
+  },
+];
+
+/*
+ * UBAH: daftar fasilitas kantor, workshop, dan gudang di kawasan operasional.
+ * EFEK: memperbarui bagian Fasilitas pada halaman /tentang.
+ * CARA: sesuaikan kapasitas ruang, peralatan inspeksi, atau cakupan pekerjaan di tiap fasilitas.
+ */
+const facilities: {
+  tag: string;
+  title: string;
+  icon: IconName;
+  description: string;
+  capabilities: string[];
+}[] = [
+  {
+    tag: 'Pusat Administrasi dan Konsultasi',
+    title: 'Kantor Penjualan dan Layanan Pelanggan',
+    icon: 'helmet',
+    description:
+      'Ruang pertemuan bagi tim pengadaan dan manajer proyek untuk membahas spesifikasi alat, meninjau laporan inspeksi unit, serta menyusun skema pembelian maupun penyewaan.',
+    capabilities: [
+      'Konsultasi pencocokan spesifikasi unit dan attachment',
+      'Penyusunan penawaran tertulis serta dokumen kontrak beli atau sewa',
+      'Koordinasi jadwal kunjungan yard bersama tim teknis pembeli',
+    ],
+  },
+  {
+    tag: 'Pusat Inspeksi dan Perawatan',
+    title: 'Workshop dan Area Uji Operasi',
+    icon: 'wrench',
+    description:
+      'Bengkel internal untuk pemeriksaan pra-pengiriman, perawatan berkala kelipatan jam kerja, penggantian seal hidrolik, perbaikan mesin diesel, serta uji gerak unit sebelum diberangkatkan.',
+    capabilities: [
+      'Jalur perawatan untuk excavator, bulldozer, loader, grader, dan compactor',
+      'Peralatan ukur tekanan pompa hidrolik dan pemeriksaan sistem kelistrikan',
+      'Area yard terbuka untuk pengujian fungsi boom, bilah, dan transmisi',
+    ],
+  },
+  {
+    tag: 'Dukungan Purna Jual',
+    title: 'Gudang Suku Cadang',
+    icon: 'gear',
+    description:
+      'Penyimpanan komponen perawatan rutin dan suku cadang aus di lokasi yang sama dengan workshop agar persiapan unit dan pengiriman ke proyek luar kota berlangsung lebih cepat.',
+    capabilities: [
+      'Stok filter oli, filter bahan bakar, filter hidrolik, dan filter udara',
+      'Komponen aus seperti gigi bucket, cutting edge, pin, bushing, dan seal kit',
+      'Pengemasan aman untuk pengiriman darat maupun udara ke lokasi proyek',
+    ],
+  },
+];
+
+/*
+ * UBAH: struktur tim penjualan dan servis (memakai inisial divisi dan jabatan, tanpa foto palsu).
+ * EFEK: memperbarui kartu tim pada halaman /tentang.
+ * CARA: ganti inisial, jabatan, atau uraian tugas jika struktur divisi berubah.
+ */
+const teamDivisions: {
+  initials: string;
+  role: string;
+  division: string;
+  focus: string;
+  icon: IconName;
+}[] = [
+  {
+    initials: 'PU',
+    role: 'Tim Penjualan dan Penyewaan Unit',
+    division: 'Pengadaan dan Kontrak',
+    focus:
+      'Membantu pemetaan kebutuhan proyek, menyiapkan rincian spesifikasi, mengatur jadwal inspeksi fisik di yard, serta mendampingi skema pembelian, sewa, dan pembiayaan.',
+    icon: 'bucket',
+  },
+  {
+    initials: 'WS',
+    role: 'Tim Workshop dan Mekanik Lapangan',
+    division: 'Servis dan Perawatan',
+    focus:
+      'Menjalankan pemeriksaan pra-pengiriman, perawatan berkala di bengkel Pulogadung, diagnosa gangguan hidrolik maupun mesin, serta kunjungan perbaikan ke lokasi kerja.',
+    icon: 'wrench',
+  },
+  {
+    initials: 'SC',
+    role: 'Tim Suku Cadang dan Identifikasi Part',
+    division: 'Gudang dan Purna Jual',
+    focus:
+      'Memverifikasi kecocokan nomor bagian (part number), menyiapkan paket perawatan berkala, serta memantau pengiriman komponen pengganti ke berbagai wilayah proyek.',
+    icon: 'gear',
+  },
+  {
+    initials: 'LM',
+    role: 'Tim Logistik dan Mobilisasi Unit',
+    division: 'Pengiriman dan Serah Terima',
+    focus:
+      'Mengatur pengangkutan memakai trailer lowbed untuk rute darat dan kapal LCT untuk rute antarpulau, lengkap dengan pengecekan muatan dan berita acara serah terima.',
+    icon: 'truck',
+  },
+];
+
+const operationalWorkflow = [
+  {
+    step: '01',
+    title: 'Pemetaan Pekerjaan',
+    detail:
+      'Tim penjualan menerima data jenis material, jam kerja harian, dan batas akses lokasi proyek dari pelanggan.',
+  },
+  {
+    step: '02',
+    title: 'Inspeksi Bersama di Yard',
+    detail:
+      'Mekanik workshop menjalankan uji mesin, hidrolik, dan undercarriage sambil mendokumentasikan seluruh hasil pengecekan.',
+  },
+  {
+    step: '03',
+    title: 'Persiapan dan Pengiriman',
+    detail:
+      'Unit menjalani servis akhir, pemasangan attachment yang diminta, lalu dimobilisasi memakai lowbed atau kapal LCT.',
+  },
+  {
+    step: '04',
+    title: 'Pendampingan Purna Jual',
+    detail:
+      'Setelah serah terima, tim servis dan gudang suku cadang membantu jadwal perawatan berkala serta pasokan komponen aus.',
+  },
+];
+---
+
+<Base
+  title="Tentang Kami"
+  description={`Profil ${siteConfig.legalName}: perusahaan penjualan, penyewaan, servis, dan suku cadang alat berat dengan kantor, workshop, dan gudang suku cadang di Jakarta Timur.`}
+>
+  <!-- Kepala halaman Tentang Kami -->
+  <section class="relative overflow-hidden bg-steel-950 py-14 text-white lg:py-18">
+    <div
+      class="pointer-events-none absolute top-0 right-0 hidden h-full w-[28%] bg-safety/12 lg:block"
+      style="clip-path: polygon(22% 0, 100% 0, 100% 100%, 0 100%);"
+      aria-hidden="true"
+    ></div>
+
+    <div class="container-wide relative z-10">
+      <nav aria-label="Jejak halaman" class="mb-4 text-xs font-semibold uppercase tracking-wider text-steel-muted">
+        <ol class="m-0 flex list-none flex-wrap items-center gap-2 p-0">
+          <li><a href="/" class="text-steel-muted hover:text-safety">Beranda</a></li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" class="text-safety">Tentang Kami</li>
+        </ol>
+      </nav>
+
+      <div class="max-w-3xl">
+        <p class="section-kicker section-kicker-dark">Profil Perusahaan</p>
+        <h1 class="text-white">
+          Satu Pintu Pengadaan dan Dukungan Teknis Alat Berat
+        </h1>
+        <p class="mt-4 text-base leading-relaxed text-steel-muted">
+          {siteConfig.legalName} beroperasi di {siteConfig.address.short} untuk membantu kontraktor, pengelola tambang, dan pelaksana proyek mendapatkan alat berat yang siap kerja sejak hari pertama tiba di lapangan.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. CERITA PERUSAHAAN -->
+  <section aria-labelledby="cerita-heading" class="section-pad bg-surface-warm">
+    <div class="container-wide">
+      <div class="grid items-center gap-10 lg:grid-cols-[1.1fr_0.95fr] lg:gap-14">
+        <div class="space-y-4">
+          <p class="section-kicker section-kicker-light">Cerita Perusahaan</p>
+          <h2 id="cerita-heading" class="text-steel-950">
+            Dibangun dari Kebutuhan Nyata di Lapangan Proyek
+          </h2>
+          <p class="text-base leading-relaxed text-steel-gray">
+            Di banyak proyek konstruksi, pertambangan, dan perkebunan, hambatan terbesar bukan hanya mencari unit yang tersedia, melainkan memastikan alat tersebut benar-benar sehat secara mekanis dan mudah dirawat ketika sudah bekerja jauh dari pusat kota.
+          </p>
+          <p class="text-base leading-relaxed text-steel-gray">
+            {siteConfig.legalName} menyatukan empat fungsi penting di bawah satu atap: penjualan unit baru dan bekas, penyewaan sesuai jadwal kerja, perawatan di workshop internal, serta pasokan suku cadang dari gudang sendiri. Dengan struktur ini, satu tim yang memahami riwayat unit ikut bertanggung jawab mendampingi operasional Anda sesudah serah terima.
+          </p>
+          <p class="text-base leading-relaxed text-steel-gray">
+            Kami mengutamakan komunikasi yang lugas mengenai kondisi unit, spesifikasi teknis, serta perkiraan waktu pengiriman agar keputusan pengadaan di pihak Anda didasarkan pada data yang bisa diperiksa langsung.
+          </p>
+
+          <div class="flex flex-wrap gap-3 pt-3">
+            <Button href="/produk" variant="primary" icon="arrow-right">
+              Lihat Katalog Unit
+            </Button>
+            <Button href="/kontak" variant="outline-dark" icon="map-pin" iconPosition="left">
+              Jadwalkan Kunjungan Yard
+            </Button>
+          </div>
+        </div>
+
+        <Reveal direction="right" class="space-y-4">
+          <div class="cut-corner-tr overflow-hidden border-l-4 border-safety bg-steel-950 shadow-lg">
+            <img
+              src="/images/workshop-inspeksi.jpg"
+              alt="Foto pemeriksaan unit alat berat di dalam workshop PT Wirabaja Mesin Nusantara"
+              width="960"
+              height="720"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover"
+            />
+          </div>
+
+          <div class="grid gap-4 rounded-[4px] border border-border-light bg-surface-white p-5 sm:grid-cols-2">
+            <div>
+              <p class="font-display text-xs font-bold uppercase tracking-wider text-steel-gray">
+                Lokasi Operasional
+              </p>
+              <p class="mt-1 text-sm font-semibold text-steel-950">
+                {siteConfig.address.short}
+              </p>
+            </div>
+            <div>
+              <p class="font-display text-xs font-bold uppercase tracking-wider text-steel-gray">
+                Jam Layanan
+              </p>
+              <p class="mt-1 text-sm font-semibold text-steel-950">
+                {siteConfig.hours.label}
+              </p>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. NILAI KERJA -->
+  <section aria-labelledby="nilai-heading" class="section-pad bg-surface-white">
+    <div class="container-wide">
+      <div class="max-w-2xl">
+        <p class="section-kicker section-kicker-light">Nilai Kerja</p>
+        <h2 id="nilai-heading" class="text-steel-950">
+          Prinsip yang Kami Pegang di Setiap Transaksi
+        </h2>
+      </div>
+
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        {workValues.map((item, idx) => (
+          <Reveal
+            as="article"
+            delay={idx * 70}
+            class="flex gap-5 border-t-2 border-steel-950 bg-surface-warm p-6"
+          >
+            <span class="font-display text-3xl font-extrabold text-safety-dark">
+              {item.number}
+            </span>
+            <div>
+              <h3 class="text-2xl text-steel-950">{item.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-steel-gray">
+                {item.description}
+              </p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. FASILITAS (KANTOR, WORKSHOP, GUDANG SUKU CADANG) -->
+  <section aria-labelledby="fasilitas-heading" class="section-pad bg-steel-950 text-white">
+    <div class="container-wide">
+      <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+        <div class="max-w-2xl">
+          <p class="section-kicker section-kicker-dark">Fasilitas Operasional</p>
+          <h2 id="fasilitas-heading" class="text-white">
+            Kantor, Workshop, dan Gudang Suku Cadang di Satu Lokasi
+          </h2>
+          <p class="mt-3 text-base leading-relaxed text-steel-muted">
+            Terletak di {siteConfig.address.full}, kemudahan akses jalur tol dalam kota dan pelabuhan mempercepat proses pemeriksaan fisik maupun mobilisasi unit ke seluruh Indonesia.
+          </p>
+        </div>
+
+        <Button
+          href={siteConfig.address.mapsUrl}
+          external={true}
+          variant="primary"
+          size="sm"
+          icon="external"
+        >
+          Buka Lokasi di Google Maps
+        </Button>
+      </div>
+
+      <div class="mt-10 grid gap-6 lg:grid-cols-3">
+        {facilities.map((facility, idx) => (
+          <Reveal
+            as="article"
+            delay={idx * 80}
+            class="flex flex-col justify-between rounded-[4px] border border-white/15 border-t-4 border-t-safety bg-steel-900 p-6"
+          >
+            <div>
+              <div class="flex items-center justify-between gap-3">
+                <span class="font-display text-xs font-bold uppercase tracking-wider text-safety">
+                  {facility.tag}
+                </span>
+                <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[2px] bg-steel-950 text-safety">
+                  <Icon name={facility.icon} size={20} />
+                </span>
+              </div>
+
+              <h3 class="mt-3 text-2xl text-white">{facility.title}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-steel-muted">
+                {facility.description}
+              </p>
+            </div>
+
+            <ul class="m-0 mt-6 list-none space-y-2.5 border-t border-white/15 pt-5 p-0 text-sm text-white">
+              {facility.capabilities.map((cap) => (
+                <li class="flex items-start gap-2.5">
+                  <Icon name="check" size={15} class="mt-1 shrink-0 text-safety" />
+                  <span class="text-steel-muted">{cap}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. TIM PENJUALAN DAN SERVIS (INISIAL DIVISI DAN JABATAN, TANPA FOTO PALSU) -->
+  <section aria-labelledby="tim-heading" class="section-pad bg-surface-warm">
+    <div class="container-wide">
+      <div class="max-w-2xl">
+        <p class="section-kicker section-kicker-light">Struktur Tim</p>
+        <h2 id="tim-heading" class="text-steel-950">
+          Empat Divisi Inti yang Menangani Kebutuhan Proyek Anda
+        </h2>
+        <p class="mt-3 text-base text-steel-gray">
+          Setiap permintaan ditangani langsung oleh divisi terkait agar konsultasi spesifikasi, pemeriksaan teknis, pengadaan suku cadang, dan pengaturan kirim berjalan saling terhubung.
+        </p>
+      </div>
+
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        {teamDivisions.map((member, idx) => (
+          <Reveal
+            as="article"
+            delay={idx * 70}
+            class="flex flex-col gap-5 rounded-[4px] border border-border-light bg-surface-white p-6 sm:flex-row sm:items-start"
+          >
+            <!-- Lencana inisial geometris potongan diagonal sebagai pengganti foto -->
+            <div
+              class="relative flex h-16 w-16 shrink-0 items-center justify-center bg-steel-950 font-display text-2xl font-extrabold tracking-wider text-safety"
+              style="clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);"
+              aria-hidden="true"
+            >
+              {member.initials}
+            </div>
+
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider text-steel-gray">
+                <Icon name={member.icon} size={14} class="text-safety-dark" />
+                <span>{member.division}</span>
+              </div>
+              <h3 class="mt-1.5 text-2xl text-steel-950">{member.role}</h3>
+              <p class="mt-2.5 text-sm leading-relaxed text-steel-gray">
+                {member.focus}
+              </p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ALUR KERJA OPERASIONAL -->
+  <section aria-labelledby="alur-kerja-heading" class="section-pad bg-surface-white">
+    <div class="container-wide">
+      <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div class="max-w-2xl">
+          <p class="section-kicker section-kicker-light">Alur Kerja Internal</p>
+          <h2 id="alur-kerja-heading" class="text-steel-950">
+            Bagaimana Permintaan Anda Diproses Sampai Unit Bekerja
+          </h2>
+        </div>
+
+        <Button href="/layanan" variant="outline-dark" icon="arrow-right">
+          Lihat Rincian Layanan
+        </Button>
+      </div>
+
+      <ol class="m-0 mt-10 grid list-none gap-6 p-0 sm:grid-cols-2 lg:grid-cols-4">
+        {operationalWorkflow.map((item, idx) => (
+          <Reveal
+            as="li"
+            delay={idx * 75}
+            class="rounded-[4px] border border-border-light border-l-4 border-l-safety bg-surface-warm p-6"
+          >
+            <p class="font-display text-sm font-bold uppercase tracking-wider text-steel-gray">
+              Tahap {item.step}
+            </p>
+            <h3 class="mt-2 text-2xl text-steel-950">{item.title}</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-steel-gray">
+              {item.detail}
+            </p>
+          </Reveal>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <CtaBanner
+    heading="Ingin Meninjau Unit Langsung di Yard Pulogadung?"
+    description="Hubungi tim penjualan kami untuk mengatur jadwal kunjungan, uji operasi unit, dan diskusi teknis bersama tim workshop."
+  />
+</Base>

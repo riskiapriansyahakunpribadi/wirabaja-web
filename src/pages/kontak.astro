@@ -1,0 +1,221 @@
+---
+import Base from '@/layouts/Base.astro';
+import Button from '@/components/Button.astro';
+import Icon from '@/components/Icon.astro';
+import QuoteForm from '@/components/QuoteForm.astro';
+import Reveal from '@/components/Reveal.astro';
+import { buildMailtoUrl, buildWhatsAppUrl, siteConfig } from '@/config/site';
+
+const whatsappUrl = buildWhatsAppUrl();
+const mailtoUrl = buildMailtoUrl(
+  `Permintaan Informasi Alat Berat - ${siteConfig.shortName}`,
+  `Halo Tim Penjualan ${siteConfig.legalName},\n\nSaya ingin menanyakan ketersediaan unit dan layanan alat berat.\n\nTerima kasih.`
+);
+
+const visitChecklist = [
+  'Konfirmasi jadwal kunjungan lewat WhatsApp atau email minimal satu hari sebelumnya agar unit siap diuji.',
+  'Sebutkan kategori atau kelas tonase unit yang ingin diperiksa secara fisik.',
+  'Anda diperbolehkan membawa mekanik internal untuk ikut memeriksa mesin, hidrolik, dan rangka bawah unit.',
+];
+---
+
+<Base
+  title="Kontak dan Permintaan Penawaran"
+  description={`Hubungi ${siteConfig.legalName} di ${siteConfig.address.short} untuk penawaran penjualan, penyewaan, servis berkala, dan suku cadang alat berat lewat WhatsApp atau email.`}
+>
+  <!-- Kepala halaman Kontak -->
+  <section class="relative overflow-hidden bg-steel-950 py-14 text-white lg:py-18">
+    <div
+      class="pointer-events-none absolute top-0 right-0 hidden h-full w-[28%] bg-safety/12 lg:block"
+      style="clip-path: polygon(22% 0, 100% 0, 100% 100%, 0 100%);"
+      aria-hidden="true"
+    ></div>
+
+    <div class="container-wide relative z-10">
+      <nav aria-label="Jejak halaman" class="mb-4 text-xs font-semibold uppercase tracking-wider text-steel-muted">
+        <ol class="m-0 flex list-none flex-wrap items-center gap-2 p-0">
+          <li><a href="/" class="text-steel-muted hover:text-safety">Beranda</a></li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" class="text-safety">Kontak</li>
+        </ol>
+      </nav>
+
+      <div class="max-w-3xl">
+        <p class="section-kicker section-kicker-dark">Hubungi Tim Penjualan</p>
+        <h1 class="text-white">
+          Minta Penawaran Unit, Jadwal Sewa, atau Layanan Servis
+        </h1>
+        <p class="mt-4 text-base leading-relaxed text-steel-muted">
+          Lengkapi formulir permintaan penawaran di bawah ini untuk mengirim rincian proyek langsung ke WhatsApp atau email resmi kami, atau kunjungi kantor dan workshop pada jam operasional.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Formulir permintaan penawaran dan kartu lokasi + informasi kontak -->
+  <section aria-label="Formulir penawaran dan informasi lokasi" class="section-pad bg-surface-warm">
+    <div class="container-wide">
+      <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-start lg:gap-10">
+        <!-- Kolom kiri: Formulir WhatsApp dan Email -->
+        <QuoteForm
+          idPrefix="kontak"
+          heading="Formulir Permintaan Penawaran"
+          subtitle="Seluruh data akan diformat otomatis ke pesan WhatsApp atau draf email tanpa disimpan di server luar."
+        />
+
+        <!-- Kolom kanan: Kartu alamat pengganti iframe peta, kontak langsung, dan panduan kunjungan -->
+        <div class="space-y-6">
+          <!-- Kartu lokasi alamat + tombol Buka di Google Maps (tanpa iframe pihak ketiga) -->
+          <Reveal class="cut-corner-tr overflow-hidden border-t-4 border-safety bg-steel-950 text-white shadow-lg">
+            <div class="border-b border-white/15 bg-steel-900 px-6 py-5">
+              <div class="flex items-center gap-3">
+                <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[2px] bg-safety text-steel-950">
+                  <Icon name="map-pin" size={22} />
+                </span>
+                <div>
+                  <p class="font-display text-xs font-bold uppercase tracking-wider text-safety">
+                    Lokasi Kantor dan Workshop
+                  </p>
+                  <h2 class="text-2xl text-white">{siteConfig.legalName}</h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-5 p-6">
+              <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-steel-muted">
+                  Alamat Lengkap
+                </p>
+                <p class="mt-1.5 text-base font-medium leading-relaxed text-white">
+                  {siteConfig.address.full}
+                </p>
+              </div>
+
+              <div class="grid gap-4 border-t border-white/15 pt-4 sm:grid-cols-2">
+                <div>
+                  <p class="text-xs font-bold uppercase tracking-wider text-steel-muted">
+                    Kawasan
+                  </p>
+                  <p class="mt-1 text-sm text-white">
+                    Kawasan Industri Pulogadung, {siteConfig.address.city}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-xs font-bold uppercase tracking-wider text-steel-muted">
+                    Jam Layanan
+                  </p>
+                  <p class="mt-1 text-sm text-white">
+                    {siteConfig.hours.label}
+                  </p>
+                </div>
+              </div>
+
+              <div class="pt-1">
+                <Button
+                  href={siteConfig.address.mapsUrl}
+                  external={true}
+                  variant="primary"
+                  icon="external"
+                  class="w-full justify-between"
+                >
+                  Buka di Google Maps
+                </Button>
+              </div>
+            </div>
+          </Reveal>
+
+          <!-- Saluran kontak langsung -->
+          <Reveal delay={70} class="rounded-[4px] border border-border-light bg-surface-white p-6">
+            <h2 class="text-2xl text-steel-950">Saluran Kontak Langsung</h2>
+            <p class="mt-1.5 text-sm text-steel-gray">
+              Pilih saluran yang paling cepat bagi tim pengadaan Anda.
+            </p>
+
+            <ul class="m-0 mt-5 list-none divide-y divide-border-light p-0">
+              <li class="py-3.5 first:pt-0">
+                <p class="text-xs font-bold uppercase tracking-wider text-steel-gray">
+                  WhatsApp Penjualan
+                </p>
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-1 inline-flex min-h-[44px] items-center gap-2.5 font-display text-xl font-bold text-steel-950 transition-colors hover:text-safety-dark"
+                >
+                  <Icon name="whatsapp" size={20} class="text-safety-dark" />
+                  <span>{siteConfig.contact.whatsappDisplay}</span>
+                </a>
+              </li>
+
+              <li class="py-3.5">
+                <p class="text-xs font-bold uppercase tracking-wider text-steel-gray">
+                  Email Penawaran Resmi
+                </p>
+                <a
+                  href={mailtoUrl}
+                  class="mt-1 inline-flex min-h-[44px] items-center gap-2.5 font-display text-xl font-bold text-steel-950 transition-colors hover:text-safety-dark"
+                >
+                  <Icon name="mail" size={20} class="text-safety-dark" />
+                  <span>{siteConfig.contact.email}</span>
+                </a>
+              </li>
+
+              <li class="pt-3.5">
+                <p class="text-xs font-bold uppercase tracking-wider text-steel-gray">
+                  Jam Operasional Kantor dan Workshop
+                </p>
+                <p class="mt-1.5 flex items-center gap-2.5 text-sm font-semibold text-steel-950">
+                  <Icon name="clock" size={18} class="shrink-0 text-safety-dark" />
+                  <span>{siteConfig.hours.label}</span>
+                </p>
+              </li>
+            </ul>
+          </Reveal>
+
+          <!-- Panduan kunjungan inspeksi yard -->
+          <Reveal delay={130} class="rounded-[4px] border border-border-light border-l-4 border-l-steel-950 bg-surface-white p-6">
+            <h2 class="text-2xl text-steel-950">Kunjungan Inspeksi Unit</h2>
+            <ul class="m-0 mt-3 list-none space-y-2.5 p-0 text-sm leading-relaxed text-steel-gray">
+              {visitChecklist.map((point) => (
+                <li class="flex items-start gap-2.5">
+                  <Icon name="check" size={16} class="mt-1 shrink-0 text-safety-dark" />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ringkasan jangkauan pengiriman dari site.ts -->
+  <section aria-labelledby="jangkauan-heading" class="section-pad bg-surface-white">
+    <div class="container-wide">
+      <div class="max-w-2xl">
+        <p class="section-kicker section-kicker-light">Jangkauan Pengiriman</p>
+        <h2 id="jangkauan-heading" class="text-steel-950">
+          Pengiriman Unit dan Suku Cadang dari Jakarta Timur ke Seluruh Indonesia
+        </h2>
+        <p class="mt-3 text-base text-steel-gray">
+          Cantumkan nama kota atau kabupaten lokasi kerja Anda di formulir agar kami dapat memperhitungkan rute darat maupun penyeberangan laut secara tepat.
+        </p>
+      </div>
+
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {siteConfig.serviceAreas.map((area, idx) => (
+          <Reveal as="article" delay={idx * 55} class="card-sector">
+            <h3 class="text-xl text-steel-950">{area.region}</h3>
+            <p class="mt-1.5 text-sm leading-relaxed text-steel-gray">
+              {area.coverage}
+            </p>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import '@/scripts/contact-prefill';
+  </script>
+</Base>

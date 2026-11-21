@@ -1,0 +1,911 @@
+﻿---
+import Base from '@/layouts/Base.astro';
+import Button from '@/components/Button.astro';
+import CtaBanner from '@/components/CtaBanner.astro';
+import Icon, { type IconName } from '@/components/Icon.astro';
+import Reveal from '@/components/Reveal.astro';
+import { siteConfig } from '@/config/site';
+
+/*
+ * UBAH: daftar kategori alat berat yang ditampilkan di Beranda.
+ * EFEK: mengubah bar fakta jumlah kategori serta kartu kategori unggulan dan katalog ringkas.
+ * CARA: sesuaikan teks atau ganti path gambar pada properti `image` dengan berkas baru di public/images/.
+ */
+const featuredCategory = {
+  slug: 'excavator',
+  name: 'Excavator',
+  classRange: 'Kelas 6 Ton sampai 35 Ton',
+  summary:
+    'Tersedia untuk penggalian fondasi, pembuatan parit, bongkar muat material tambang, serta penataan lereng perkebunan dengan pilihan bucket standar dan batu.',
+  highlights: ['Sistem hidrolik responsif', 'Pilihan arm standar dan long reach', 'Tersedia opsi beli dan sewa'],
+  image: '/images/cat-excavator.jpg',
+  imageAlt: 'Foto excavator hidrolik kuning dan biru baja siap kerja di lokasi galian',
+};
+
+const unitCategories = [
+  {
+    slug: 'bulldozer',
+    name: 'Bulldozer',
+    classRange: 'Kelas 160 HP sampai 320 HP',
+    summary: 'Pembukaan lahan baru, perataan badan jalan, dan pendorongan tanah keras di area tambang maupun perkebunan.',
+    image: '/images/cat-bulldozer.jpg',
+    imageAlt: 'Foto bulldozer beroda rantai dengan bilah pendorong depan',
+  },
+  {
+    slug: 'wheel-loader',
+    name: 'Wheel Loader',
+    classRange: 'Bucket 1,8 m³ sampai 5,0 m³',
+    summary: 'Pemuatan pasir, batu pecah, batu bara, dan material curah ke dump truck secara cepat di stockpile.',
+    image: '/images/cat-wheel-loader.jpg',
+    imageAlt: 'Foto wheel loader beroda karet dengan bucket muat depan',
+  },
+  {
+    slug: 'dump-truck',
+    name: 'Dump Truck',
+    classRange: 'Kapasitas 20 Ton sampai 40 Ton',
+    summary: 'Pengangkutan tanah galian, agregat proyek, dan overburden pada jalur tambang maupun jalan kerja proyek.',
+    image: '/images/cat-dump-truck.jpg',
+    imageAlt: 'Foto dump truck angkut berat untuk jalur tambang dan konstruksi',
+  },
+  {
+    slug: 'motor-grader',
+    name: 'Motor Grader',
+    classRange: 'Lebar Bilah 3,7 m sampai 4,3 m',
+    summary: 'Pembentukan kemiringan jalan, perawatan hauling road tambang, dan perataan lapisan dasar aspal.',
+    image: '/images/cat-motor-grader.jpg',
+    imageAlt: 'Foto motor grader dengan bilah perata tengah untuk pekerjaan jalan',
+  },
+  {
+    slug: 'compactor',
+    name: 'Compactor',
+    classRange: 'Berat Operasi 10 Ton sampai 20 Ton',
+    summary: 'Pemadatan lapisan tanah dasar, timbunan jalan tol, dan lantai kerja kawasan pergudangan.',
+    image: '/images/cat-compactor.jpg',
+    imageAlt: 'Foto vibratory compactor berdrum baja untuk pemadatan tanah',
+  },
+];
+
+/*
+ * UBAH: bar fakta di bawah hero hanya memuat fakta nyata yang dapat diperiksa dari isi website.
+ * EFEK: memperbarui 4 kolom ringkasan tepat di bawah bagian hero.
+ * CARA: angka kategori dan wilayah terhitung otomatis; ubah teks penjelas jika struktur layanan bertambah.
+ */
+const totalCategories = 1 + unitCategories.length;
+const factItems = [
+  {
+    icon: 'bucket' as IconName,
+    value: `${totalCategories} Kategori Unit`,
+    label: 'Excavator, bulldozer, loader, dump truck, grader, dan compactor',
+  },
+  {
+    icon: 'wrench' as IconName,
+    value: 'Jual, Sewa, Servis',
+    label: 'Pengadaan unit baru dan bekas, sewa proyek, hingga suku cadang',
+  },
+  {
+    icon: 'clock' as IconName,
+    value: siteConfig.hours.days,
+    label: `Layanan kantor dan workshop pukul ${siteConfig.hours.time}`,
+  },
+  {
+    icon: 'truck' as IconName,
+    value: `${siteConfig.serviceAreas.length} Wilayah Kirim`,
+    label: 'Pengiriman darat dan laut menjangkau Jawa, Sumatra, Kalimantan, dan Timur',
+  },
+];
+
+/*
+ * UBAH: ringkasan 5 layanan utama pada Beranda (tautan terhubung ke anchor halaman Layanan).
+ * EFEK: memperbarui daftar layanan di Beranda.
+ * CARA: ubah `title`, `summary`, atau `ctaLabel` sambil mempertahankan `href` yang cocok dengan ID di halaman Layanan.
+ */
+const homeServices = [
+  {
+    number: '01',
+    icon: 'bucket' as IconName,
+    title: 'Penjualan Unit Baru dan Bekas',
+    summary:
+      'Pilihan unit siap pakai lengkap dengan catatan pemeriksaan teknis, pengujian beban hidrolik, dan kelengkapan dokumen serah terima.',
+    ctaLabel: 'Lihat Skema Pembelian',
+    href: '/layanan#penjualan',
+  },
+  {
+    number: '02',
+    icon: 'track' as IconName,
+    title: 'Penyewaan Alat Berat Proyek',
+    summary:
+      'Sewa harian, bulanan, hingga kontrak jangka proyek untuk memenuhi lonjakan pekerjaan tanpa membebani modal pembelian aset.',
+    ctaLabel: 'Lihat Skema Penyewaan',
+    href: '/layanan#penyewaan',
+  },
+  {
+    number: '03',
+    icon: 'wrench' as IconName,
+    title: 'Servis dan Perawatan Berkala',
+    summary:
+      'Perawatan preventif berkala, perbaikan mesin dan sistem hidrolik, serta dukungan mekanik ke lokasi kerja agar waktu henti tetap minimal.',
+    ctaLabel: 'Lihat Layanan Servis',
+    href: '/layanan#servis',
+  },
+  {
+    number: '04',
+    icon: 'gear' as IconName,
+    title: 'Pasokan Suku Cadang',
+    summary:
+      'Ketersediaan komponen cepat habis seperti filter, seal hidrolik, gigi bucket, undercarriage, dan suku cadang mesin dari gudang Pulogadung.',
+    ctaLabel: 'Cek Layanan Suku Cadang',
+    href: '/layanan#suku-cadang',
+  },
+  {
+    number: '05',
+    icon: 'layers' as IconName,
+    title: 'Dukungan Pembiayaan Unit',
+    summary:
+      'Pendampingan skema pembayaran bertahap maupun pembiayaan lewat mitra lembaga pembiayaan alat berat sesuai arus kas proyek.',
+    ctaLabel: 'Lihat Opsi Pembiayaan',
+    href: '/layanan#pembiayaan',
+  },
+];
+
+const whyChooseItems = [
+  {
+    icon: 'shield' as IconName,
+    title: 'Pemeriksaan Unit Sebelum Serah Terima',
+    description:
+      'Setiap unit melalui pengecekan tekanan hidrolik, kondisi mesin, rangka bawah, serta uji operasi di yard sebelum diberangkatkan.',
+  },
+  {
+    icon: 'wrench' as IconName,
+    title: 'Workshop dan Mekanik Sendiri',
+    description:
+      'Tim teknisi internal di workshop Pulogadung menangani perawatan berkala, rekondisi komponen, dan persiapan unit secara langsung.',
+  },
+  {
+    icon: 'truck' as IconName,
+    title: 'Pengiriman ke Lokasi Proyek',
+    description:
+      'Koordinasi pengangkutan memakai trailer lowbed untuk jalur darat serta kapal LCT dan kontainer untuk pengiriman antarpulau.',
+  },
+  {
+    icon: 'gear' as IconName,
+    title: 'Dukungan Suku Cadang Berkelanjutan',
+    description:
+      'Gudang suku cadang di lokasi yang sama membantu mempercepat pengiriman filter, selang hidrolik, dan komponen aus saat unit beroperasi.',
+  },
+];
+
+const processSteps = [
+  {
+    step: '01',
+    icon: 'helmet' as IconName,
+    title: 'Konsultasi Kebutuhan',
+    description:
+      'Anda menyampaikan jenis pekerjaan, karakter tanah atau material, durasi pemakaian, serta target jadwal mulai kerja.',
+  },
+  {
+    step: '02',
+    icon: 'boom' as IconName,
+    title: 'Pemilihan Unit',
+    description:
+      'Tim kami merekomendasikan kelas kapasitas yang pas beserta opsi beli atau sewa, termasuk jadwal kunjungan cek fisik unit di yard.',
+  },
+  {
+    step: '03',
+    icon: 'layers' as IconName,
+    title: 'Penawaran dan Kesepakatan',
+    description:
+      'Penawaran tertulis merinci spesifikasi unit, kelengkapan attachment, ketentuan perawatan, jadwal kirim, serta skema pembayaran.',
+  },
+  {
+    step: '04',
+    icon: 'truck' as IconName,
+    title: 'Pengiriman dan Serah Terima',
+    description:
+      'Unit menjalani pemeriksaan akhir, dikirim ke lokasi kerja, dan diserahterimakan bersama berita acara serta panduan perawatan awal.',
+  },
+];
+
+/*
+ * UBAH: tiga proyek pilihan di Beranda (selaras dengan berkas src/data/projects.ts di Tahap 6).
+ * EFEK: memperbarui galeri proyek ringkas pada Beranda.
+ * CARA: pastikan `href` cocok dengan ID proyek di halaman Proyek.
+ */
+const featuredProjects = [
+  {
+    sector: 'Pertambangan',
+    title: 'Pasokan Unit Pengupasan Lapisan Tanah Tambang Terbuka',
+    location: 'Kalimantan Timur',
+    units: 'Excavator Kelas 30 Ton dan Dump Truck Kapasitas 30 Ton',
+    image: '/images/proyek-tambang.jpg',
+    imageAlt: 'Foto excavator dan dump truck bekerja di lokasi tambang terbuka',
+    href: '/proyek#pengupasan-tambang-kaltim',
+  },
+  {
+    sector: 'Infrastruktur',
+    title: 'Pembentukan dan Pemadatan Badan Jalan Akses Kawasan',
+    location: 'Jawa Barat',
+    units: 'Motor Grader 180 HP dan Vibratory Compactor 12 Ton',
+    image: '/images/proyek-infrastruktur.jpg',
+    imageAlt: 'Foto motor grader dan compactor meratakan serta memadatkan badan jalan',
+    href: '/proyek#badan-jalan-jabar',
+  },
+  {
+    sector: 'Perkebunan',
+    title: 'Pembukaan Lahan dan Pembuatan Parit Drainase Perkebunan',
+    location: 'Riau, Sumatra',
+    units: 'Bulldozer Kelas 160 HP dan Excavator Kelas 20 Ton',
+    image: '/images/proyek-perkebunan.jpg',
+    imageAlt: 'Foto bulldozer membuka dan meratakan lahan perkebunan',
+    href: '/proyek#pembukaan-lahan-riau',
+  },
+];
+
+const sectorsServed = [
+  {
+    name: 'Konstruksi',
+    detail: 'Penggalian fondasi gedung, pematangan lahan kavling, dan pemindahan tanah proyek komersial dengan excavator serta wheel loader.',
+  },
+  {
+    name: 'Pertambangan',
+    detail: 'Pengupasan lapisan penutup, pemuatan batu bara dan bijih mineral, serta perawatan jalan angkut dengan unit berkapasitas besar.',
+  },
+  {
+    name: 'Perkebunan',
+    detail: 'Pembukaan blok tanam baru, penumbangan batang tua, perataan teras, dan pembuatan saluran drainase pada lahan lunak maupun berbukit.',
+  },
+  {
+    name: 'Infrastruktur',
+    detail: 'Pekerjaan jalan nasional, jalan tol, jembatan, bendungan, dan pelabuhan memakai grader, compactor, serta dump truck.',
+  },
+  {
+    name: 'Kehutanan',
+    detail: 'Pembuatan dan pemeliharaan jalur akses angkut kayu pada medan berat dengan bulldozer serta excavator berpelindung kabin.',
+  },
+  {
+    name: 'Pergudangan',
+    detail: 'Pematangan kawasan logistik, pemadatan lantai kerja gudang, dan bongkar muat agregat curah di area industri.',
+  },
+];
+---
+
+<Base
+  title="Beranda"
+  description={siteConfig.seoDescription}
+  transparentHeader={true}
+  isHome={true}
+>
+  <!-- 1. HERO PENUH LAYAR -->
+  <section
+    aria-labelledby="hero-heading"
+    class="relative flex min-h-[min(92dvh,800px)] items-center overflow-hidden bg-steel-950 pt-[116px] pb-20 text-white lg:pt-[138px] lg:pb-28"
+  >
+    <!-- Panel foto alat berat di separuh kanan desktop dengan warna asli penuh -->
+    <div class="pointer-events-none absolute inset-0 lg:left-[50%]" aria-hidden="true">
+      <div class="hero-media-cut relative h-full w-full overflow-hidden">
+        <img
+          src="/images/hero-excavator.jpg"
+          alt=""
+          width="1600"
+          height="1067"
+          fetchpriority="high"
+          decoding="async"
+          data-hero-parallax
+          class="h-full w-full object-cover object-center will-change-transform"
+        />
+        <!-- Lapisan gelap hanya untuk layar ponsel agar teks putih tetap terbaca -->
+        <div class="absolute inset-0 bg-steel-950/82 lg:hidden"></div>
+        <!-- Bayangan tipis hanya di tepi paling atas belakang menu header agar tulisan menu tetap jelas -->
+        <div class="absolute inset-x-0 top-0 hidden h-28 bg-gradient-to-b from-black/45 to-transparent lg:block"></div>
+      </div>
+
+      <!-- Garis aksen kuning mengikuti tepi diagonal gambar, mulai tepat di bawah header -->
+      <div class="hero-seam-accent hidden lg:block"></div>
+    </div>
+
+    <div class="container-wide relative z-10">
+      <div class="max-w-xl lg:max-w-[45%]">
+        <p class="section-kicker section-kicker-dark">
+          {siteConfig.legalName}
+        </p>
+
+        <h1
+          id="hero-heading"
+          class="font-display font-extrabold uppercase tracking-tight text-white"
+          style="font-size: clamp(2.25rem, 1.35rem + 2.4vw, 4.15rem); line-height: 1.03;"
+        >
+          <span class="hero-line-mask">
+            <span class="hero-line-inner" style="--line-delay: 40ms;">
+              Alat Berat Siap Kerja
+            </span>
+          </span>
+          <span class="hero-line-mask">
+            <span class="hero-line-inner text-safety" style="--line-delay: 140ms;">
+              Untuk Proyek Anda
+            </span>
+          </span>
+        </h1>
+
+        <p class="mt-5 max-w-lg text-base leading-relaxed text-steel-muted sm:text-lg">
+          Pengadaan unit baru dan bekas, penyewaan sesuai jadwal kerja, perawatan berkala di workshop sendiri, serta pasokan suku cadang untuk proyek di seluruh Indonesia.
+        </p>
+
+        <div class="mt-8 flex flex-col gap-3.5 sm:flex-row sm:flex-wrap sm:items-center">
+          <Button
+            href="/kontak"
+            variant="primary"
+            icon="arrow-right"
+            magnetic={true}
+          >
+            Minta Penawaran Unit
+          </Button>
+          <Button
+            href="/produk"
+            variant="outline-light"
+            icon="bucket"
+            iconPosition="left"
+          >
+            Lihat Katalog Unit
+          </Button>
+        </div>
+
+        <!-- Tiga penanda konkret di bawah tombol hero -->
+        <ul
+          class="m-0 mt-10 flex list-none flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/20 pt-6 p-0"
+        >
+          <li class="flex items-center gap-2.5 text-sm font-medium text-white">
+            <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] bg-safety/15 text-safety">
+              <Icon name="check" size={16} />
+            </span>
+            <span>Unit siap kirim</span>
+          </li>
+          <li class="flex items-center gap-2.5 text-sm font-medium text-white">
+            <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] bg-safety/15 text-safety">
+              <Icon name="wrench" size={16} />
+            </span>
+            <span>Layanan servis</span>
+          </li>
+          <li class="flex items-center gap-2.5 text-sm font-medium text-white">
+            <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] bg-safety/15 text-safety">
+              <Icon name="gear" size={16} />
+            </span>
+            <span>Dukungan suku cadang</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. BAR FAKTA TERUKUR -->
+  <section aria-label="Ringkasan layanan Wirabaja" class="relative z-20 -mt-8 pb-4 sm:-mt-12">
+    <div class="container-wide">
+      <div class="grid grid-cols-1 divide-y divide-border-light border-t-4 border-safety bg-surface-white shadow-lg sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-4 lg:divide-x">
+        {factItems.map((item, idx) => (
+          <Reveal delay={idx * 70} class="flex items-start gap-4 p-6">
+            <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[2px] bg-steel-950 text-safety">
+              <Icon name={item.icon} size={22} />
+            </span>
+            <div>
+              <p class="font-display text-xl font-bold uppercase tracking-wide text-steel-950">
+                {item.value}
+              </p>
+              <p class="mt-1 text-sm leading-snug text-steel-gray">
+                {item.label}
+              </p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. KATEGORI UNIT DENGAN SATU KARTU UNGGULAN LEBIH BESAR -->
+  <section aria-labelledby="kategori-heading" class="section-pad bg-surface-warm">
+    <div class="container-wide">
+      <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div class="max-w-2xl">
+          <p class="section-kicker section-kicker-light">Katalog Alat Berat</p>
+          <h2 id="kategori-heading" class="text-steel-950">
+            Enam Kategori Unit untuk Medan Kerja Berbeda
+          </h2>
+          <p class="mt-3 text-base text-steel-gray">
+            Pilih kategori alat yang sesuai dengan kebutuhan penggalian, pendorongan, pemuatan, pengangkutan, perataan, dan pemadatan di lokasi proyek Anda.
+          </p>
+        </div>
+
+        <Button href="/produk" variant="outline-dark" icon="arrow-right">
+          Lihat Semua Unit Tersedia
+        </Button>
+      </div>
+
+      <!-- Tata letak asimetris: kartu unggulan Excavator besar di atas, diikuti 5 kategori lainnya -->
+      <div class="mt-10 grid gap-6 lg:grid-cols-12">
+        <Reveal class="card-featured lg:col-span-7">
+          <div class="grid h-full grid-cols-1 md:grid-cols-[1.05fr_1fr]">
+            <div class="relative min-h-[240px] bg-steel-980">
+              <img
+                src={featuredCategory.image}
+                alt={featuredCategory.imageAlt}
+                width="800"
+                height="600"
+                loading="lazy"
+                class="h-full w-full object-cover"
+              />
+              <span class="absolute top-4 left-4 bg-safety px-3 py-1 font-display text-xs font-bold uppercase tracking-wider text-steel-950">
+                Kategori Paling Banyak Dicari
+              </span>
+            </div>
+
+            <div class="flex flex-col justify-between p-6 sm:p-7">
+              <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-safety">
+                  {featuredCategory.classRange}
+                </p>
+                <h3 class="mt-1 text-3xl text-white">
+                  {featuredCategory.name}
+                </h3>
+                <p class="mt-3 text-sm leading-relaxed text-steel-muted">
+                  {featuredCategory.summary}
+                </p>
+
+                <ul class="m-0 mt-5 list-none space-y-2 p-0 text-sm text-white">
+                  {featuredCategory.highlights.map((point) => (
+                    <li class="flex items-center gap-2">
+                      <Icon name="check" size={15} class="shrink-0 text-safety" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="mt-6 pt-4">
+                <Button
+                  href={`/produk?kategori=${featuredCategory.slug}`}
+                  variant="primary"
+                  size="sm"
+                  icon="arrow-right"
+                >
+                  Lihat Unit Excavator
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        <!-- Dua kategori pendamping di kanan atas agar ritme kolom bervariasi -->
+        <div class="grid gap-6 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
+          {unitCategories.slice(0, 2).map((cat, idx) => (
+            <Reveal delay={(idx + 1) * 70} class="card-product">
+              <div class="grid h-full grid-cols-1 sm:grid-cols-[180px_1fr]">
+                <div class="card-product-media aspect-[4/3] sm:aspect-auto">
+                  <img
+                    src={cat.image}
+                    alt={cat.imageAlt}
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="flex flex-col justify-between p-5">
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-steel-gray">
+                      {cat.classRange}
+                    </p>
+                    <h3 class="mt-1 text-2xl text-steel-950">{cat.name}</h3>
+                    <span class="card-product-title-line" aria-hidden="true"></span>
+                    <p class="mt-3 text-sm leading-relaxed text-steel-gray">
+                      {cat.summary}
+                    </p>
+                  </div>
+                  <div class="card-product-action mt-4">
+                    <a
+                      href={`/produk?kategori=${cat.slug}`}
+                      class="inline-flex min-h-[44px] items-center gap-2 font-display text-base font-bold uppercase tracking-wide text-steel-950 transition-colors hover:text-safety-dark"
+                    >
+                      <span>Lihat Unit {cat.name}</span>
+                      <Icon name="arrow-right" size={16} />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        <!-- Tiga kategori berikutnya di baris bawah -->
+        {unitCategories.slice(2).map((cat, idx) => (
+          <Reveal delay={idx * 75} class="card-product lg:col-span-4">
+            <div class="card-product-media cut-corner-tr aspect-[16/10]">
+              <img
+                src={cat.image}
+                alt={cat.imageAlt}
+                width="800"
+                height="600"
+                loading="lazy"
+              />
+            </div>
+            <div class="flex flex-1 flex-col justify-between p-6">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-steel-gray">
+                  {cat.classRange}
+                </p>
+                <h3 class="mt-1 text-2xl text-steel-950">{cat.name}</h3>
+                <span class="card-product-title-line" aria-hidden="true"></span>
+                <p class="mt-3 text-sm leading-relaxed text-steel-gray">
+                  {cat.summary}
+                </p>
+              </div>
+              <div class="card-product-action mt-5 border-t border-border-light pt-3">
+                <a
+                  href={`/produk?kategori=${cat.slug}`}
+                  class="inline-flex min-h-[44px] items-center gap-2 font-display text-base font-bold uppercase tracking-wide text-steel-950 transition-colors hover:text-safety-dark"
+                >
+                  <span>Lihat Unit {cat.name}</span>
+                  <Icon name="arrow-right" size={16} />
+                </a>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. LAYANAN TERPADU (TATA LETAK DAFTAR TERSTRUKTUR, BUKAN KARTU SERAGAM) -->
+  <section aria-labelledby="layanan-heading" class="section-pad bg-surface-white">
+    <div class="container-wide">
+      <div class="grid gap-10 lg:grid-cols-[0.9fr_1.4fr] lg:items-start">
+        <div class="lg:sticky lg:top-28">
+          <p class="section-kicker section-kicker-light">Layanan Kami</p>
+          <h2 id="layanan-heading" class="text-steel-950">
+            Dari Pengadaan Unit Sampai Dukungan Purna Jual
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-steel-gray">
+            Pembelian atau penyewaan alat berat membutuhkan dukungan teknis yang jelas sesudah unit tiba di proyek. Seluruh layanan kami dikelola terpadu dari satu kantor operasional.
+          </p>
+
+          <div class="mt-7 flex flex-wrap gap-3">
+            <Button href="/layanan" variant="dark" icon="arrow-right">
+              Bandingkan Beli dan Sewa
+            </Button>
+          </div>
+        </div>
+
+        <ol class="m-0 flex list-none flex-col divide-y divide-border-light border-t border-b border-border-light p-0">
+          {homeServices.map((service, idx) => (
+            <Reveal as="li" delay={idx * 65} class="group py-6 transition-colors hover:bg-surface-warm/60 sm:px-4">
+              <div class="grid items-start gap-4 sm:grid-cols-[56px_1fr_auto]">
+                <div class="flex items-center gap-3 sm:flex-col sm:items-start">
+                  <span class="font-display text-2xl font-extrabold text-steel-950">
+                    {service.number}
+                  </span>
+                  <span class="inline-flex h-10 w-10 items-center justify-center rounded-[2px] bg-surface-warm text-steel-950 transition-colors group-hover:bg-safety">
+                    <Icon name={service.icon} size={20} />
+                  </span>
+                </div>
+
+                <div>
+                  <h3 class="text-2xl text-steel-950">{service.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-steel-gray">
+                    {service.summary}
+                  </p>
+                </div>
+
+                <div class="sm:self-center">
+                  <a
+                    href={service.href}
+                    class="inline-flex min-h-[44px] items-center gap-2 font-display text-sm font-bold uppercase tracking-wide text-steel-950 underline decoration-safety decoration-2 underline-offset-4 transition-colors hover:text-safety-dark"
+                  >
+                    <span>{service.ctaLabel}</span>
+                    <Icon name="arrow-right" size={15} />
+                  </a>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. MENGAPA MEMILIH WIRABAJA (BAGIAN GELAP ASIMETRIS DENGAN GAMBAR MENJOROK) -->
+  <section
+    aria-labelledby="alasan-heading"
+    class="section-pad relative bg-steel-950 text-white"
+  >
+    <div class="container-wide">
+      <div class="grid items-center gap-10 lg:grid-cols-[1.05fr_1.15fr] lg:gap-14">
+        <Reveal direction="left" class="relative lg:-my-8">
+          <div class="cut-corner-tr relative overflow-hidden border-l-4 border-safety bg-steel-900 shadow-2xl">
+            <img
+              src="/images/workshop-inspeksi.jpg"
+              alt="Foto pemeriksaan unit excavator di dalam workshop PT Wirabaja Mesin Nusantara"
+              width="960"
+              height="720"
+              loading="lazy"
+              class="h-full w-full object-cover"
+            />
+          </div>
+          <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border border-white/15 bg-steel-900 px-5 py-4">
+            <div>
+              <p class="font-display text-sm font-bold uppercase tracking-wider text-safety">
+                Workshop dan Yard Pulogadung
+              </p>
+              <p class="mt-0.5 text-sm text-steel-muted">
+                Terbuka untuk jadwal inspeksi fisik unit bersama mekanik Anda.
+              </p>
+            </div>
+            <a
+              href="/tentang"
+              class="inline-flex min-h-[44px] items-center gap-2 font-display text-sm font-bold uppercase tracking-wide text-white hover:text-safety"
+            >
+              <span>Lihat Fasilitas Kami</span>
+              <Icon name="arrow-right" size={15} />
+            </a>
+          </div>
+        </Reveal>
+
+        <div>
+          <p class="section-kicker section-kicker-dark">Mengapa Memilih Wirabaja</p>
+          <h2 id="alasan-heading" class="text-white">
+            Standar Kerja Jelas Sebelum Unit Tiba di Lapangan
+          </h2>
+          <p class="mt-3 text-base leading-relaxed text-steel-muted">
+            Kami mengutamakan kesiapan teknis yang bisa diperiksa langsung, bukan janji di atas brosur. Setiap unit disiapkan agar langsung produktif saat diturunkan dari trailer.
+          </p>
+
+          <div class="mt-8 grid gap-6 sm:grid-cols-2">
+            {whyChooseItems.map((item, idx) => (
+              <Reveal delay={idx * 75} class="border-t-2 border-white/20 pt-5">
+                <div class="flex items-center gap-3">
+                  <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[2px] bg-safety text-steel-950">
+                    <Icon name={item.icon} size={20} />
+                  </span>
+                  <h3 class="text-xl text-white">{item.title}</h3>
+                </div>
+                <p class="mt-3 text-sm leading-relaxed text-steel-muted">
+                  {item.description}
+                </p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. PROSES PEMBELIAN DAN PENYEWAAN (4 LANGKAH HORIZONTAL DESKTOP / VERTIKAL PONSEL) -->
+  <section aria-labelledby="proses-heading" class="section-pad bg-surface-warm">
+    <div class="container-wide">
+      <div class="max-w-2xl">
+        <p class="section-kicker section-kicker-light">Alur Pengadaan</p>
+        <h2 id="proses-heading" class="text-steel-950">
+          Empat Tahap Kerja dari Konsultasi Sampai Serah Terima
+        </h2>
+        <p class="mt-3 text-base text-steel-gray">
+          Tahapan yang transparan membantu tim pengadaan dan manajer proyek memantau jadwal kesiapan alat dengan pasti.
+        </p>
+      </div>
+
+      <div data-process-flow class="process-flow relative mt-12">
+        <!-- Garis penghubung horizontal pada desktop yang terisi saat masuk viewport -->
+        <div
+          class="pointer-events-none absolute top-7 right-[12%] left-[12%] hidden h-1 bg-border-light lg:block"
+          aria-hidden="true"
+        >
+          <div class="process-connector-fill h-full w-full bg-safety"></div>
+        </div>
+
+        <ol class="m-0 grid list-none grid-cols-1 gap-8 p-0 md:grid-cols-2 lg:grid-cols-4">
+          {processSteps.map((item, idx) => (
+            <li
+              class="process-step relative pl-16 lg:pl-0"
+              style={`--step-delay: ${idx * 130}ms;`}
+            >
+              <!-- Garis vertikal penghubung di ponsel -->
+              {idx < processSteps.length - 1 && (
+                <span
+                  class="pointer-events-none absolute top-14 bottom-[-2rem] left-[26px] w-0.5 bg-border-light lg:hidden"
+                  aria-hidden="true"
+                ></span>
+              )}
+
+              <div class="flex items-center gap-3 lg:flex-col lg:items-start">
+                <div class="process-badge absolute top-0 left-0 inline-flex h-14 w-14 items-center justify-center border-2 border-steel-950 bg-surface-white font-display text-xl font-extrabold text-steel-950 transition-colors duration-300 lg:static">
+                  {item.step}
+                </div>
+
+                <div class="lg:mt-5">
+                  <div class="flex items-center gap-2 text-steel-950">
+                    <Icon name={item.icon} size={18} class="text-safety-dark" />
+                    <h3 class="text-2xl text-steel-950">{item.title}</h3>
+                  </div>
+                  <p class="mt-2.5 text-sm leading-relaxed text-steel-gray">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. PROYEK PILIHAN -->
+  <section aria-labelledby="proyek-heading" class="section-pad bg-surface-white">
+    <div class="container-wide">
+      <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div class="max-w-2xl">
+          <p class="section-kicker section-kicker-light">Proyek Pilihan</p>
+          <h2 id="proyek-heading" class="text-steel-950">
+            Pasokan Unit pada Pekerjaan Lapangan
+          </h2>
+          <p class="mt-3 text-base text-steel-gray">
+            Gambaran jenis unit yang kami sediakan untuk kebutuhan pengupasan tambang, pembentukan badan jalan, hingga pembukaan lahan perkebunan.
+          </p>
+        </div>
+
+        <Button href="/proyek" variant="outline-dark" icon="arrow-right">
+          Lihat Semua Proyek
+        </Button>
+      </div>
+
+      <div class="mt-10 grid gap-6 md:grid-cols-3">
+        {featuredProjects.map((project, idx) => (
+          <Reveal as="article" delay={idx * 80} class="card-product">
+            <div class="card-product-media aspect-[16/11]">
+              <img
+                src={project.image}
+                alt={project.imageAlt}
+                width="800"
+                height="540"
+                loading="lazy"
+              />
+              <span class="absolute bottom-3 left-3 bg-safety px-3 py-1 font-display text-xs font-bold uppercase tracking-wider text-steel-950">
+                {project.sector}
+              </span>
+            </div>
+
+            <div class="flex flex-1 flex-col justify-between p-6">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-steel-gray">
+                  {project.location}
+                </p>
+                <h3 class="mt-1.5 text-2xl text-steel-950">
+                  {project.title}
+                </h3>
+                <span class="card-product-title-line" aria-hidden="true"></span>
+                <p class="mt-3 text-sm leading-relaxed text-steel-gray">
+                  <strong class="font-semibold text-steel-950">Unit dipasok:</strong> {project.units}
+                </p>
+              </div>
+
+              <div class="card-product-action mt-5 border-t border-border-light pt-3">
+                <a
+                  href={project.href}
+                  class="inline-flex min-h-[44px] items-center gap-2 font-display text-base font-bold uppercase tracking-wide text-steel-950 transition-colors hover:text-safety-dark"
+                >
+                  <span>Lihat Rincian Proyek</span>
+                  <Icon name="arrow-right" size={16} />
+                </a>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. SEKTOR YANG DILAYANI DAN AREA PENGIRIMAN -->
+  <section aria-labelledby="sektor-heading" class="section-pad bg-surface-warm">
+    <div class="container-wide">
+      <div class="grid gap-10 lg:grid-cols-[1.45fr_0.95fr] lg:items-start">
+        <div>
+          <p class="section-kicker section-kicker-light">Sektor yang Kami Layani</p>
+          <h2 id="sektor-heading" class="text-steel-950">
+            Menyesuaikan Spesifikasi Unit dengan Karakter Pekerjaan
+          </h2>
+          <p class="mt-3 max-w-2xl text-base text-steel-gray">
+            Setiap industri memiliki tuntutan beban kerja dan medan yang berbeda. Tim kami membantu mencocokkan kapasitas mesin serta kelengkapan kerja untuk enam sektor utama berikut.
+          </p>
+
+          <div class="mt-8 grid gap-4 sm:grid-cols-2">
+            {sectorsServed.map((sector, idx) => (
+              <Reveal as="article" delay={idx * 55} class="card-sector">
+                <h3 class="text-2xl text-steel-950">{sector.name}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-steel-gray">
+                  {sector.detail}
+                </p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+
+        <!-- Panel area pengiriman membaca langsung dari siteConfig.serviceAreas -->
+        <Reveal direction="right" class="cut-corner-tr border-t-4 border-safety bg-steel-950 p-7 text-white shadow-xl sm:p-8">
+          <div class="flex items-center gap-3">
+            <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[2px] bg-safety text-steel-950">
+              <Icon name="map-pin" size={22} />
+            </span>
+            <div>
+              <p class="font-display text-xs font-bold uppercase tracking-wider text-safety">
+                Area Pengiriman
+              </p>
+              <h3 class="text-2xl text-white">Jangkauan Layanan Nasional</h3>
+            </div>
+          </div>
+
+          <p class="mt-4 text-sm leading-relaxed text-steel-muted">
+            Pengiriman unit dilakukan dari yard {siteConfig.address.short} memakai lowbed darat dan kapal LCT sesuai akses lokasi proyek.
+          </p>
+
+          <ul class="m-0 mt-6 list-none divide-y divide-white/15 p-0">
+            {siteConfig.serviceAreas.map((area) => (
+              <li class="py-3.5 first:pt-0 last:pb-0">
+                <div class="flex items-start gap-2.5">
+                  <Icon name="check" size={16} class="mt-1 shrink-0 text-safety" />
+                  <div>
+                    <p class="font-display text-lg font-bold tracking-wide text-white">
+                      {area.region}
+                    </p>
+                    <p class="mt-0.5 text-xs leading-relaxed text-steel-muted">
+                      {area.coverage}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <div class="mt-7 pt-2">
+            <Button
+              href="/kontak"
+              variant="primary"
+              icon="arrow-right"
+              class="w-full justify-between"
+            >
+              Cek Ongkos Kirim ke Lokasi
+            </Button>
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. PENUTUP CTA KUNING LEBAR -->
+  <CtaBanner />
+
+  <script>
+    import '@/scripts/hero-motion';
+  </script>
+</Base>
+
+<style>
+  /* Potongan diagonal hero dan garis kuning selaras tanpa menyentuh teks atau menu header */
+  .hero-media-cut {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  @media (min-width: 1024px) {
+    .hero-media-cut {
+      clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .hero-seam-accent {
+      position: absolute;
+      inset: 0;
+      background-color: var(--color-safety);
+      clip-path: polygon(12% 0, calc(12% + 12px) 0, 12px 100%, 0 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 114px, #000 114px, #000 100%);
+      mask-image: linear-gradient(to bottom, transparent 0, transparent 114px, #000 114px, #000 100%);
+    }
+  }
+
+  /* Nomor langkah alur proses menyala berurutan ketika bagian masuk layar */
+  .process-flow.is-visible .process-step .process-badge {
+    background-color: var(--color-steel-950);
+    color: var(--color-safety);
+    border-color: var(--color-steel-950);
+    transition-delay: var(--step-delay, 0ms);
+  }
+</style>

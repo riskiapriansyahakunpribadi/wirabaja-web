@@ -1,0 +1,374 @@
+---
+import Base from '@/layouts/Base.astro';
+import Button from '@/components/Button.astro';
+import Icon from '@/components/Icon.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import QuoteForm from '@/components/QuoteForm.astro';
+import { buildWhatsAppUrl, siteConfig } from '@/config/site';
+import { getRelatedProducts, products, type ProductUnit } from '@/data/products';
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: ProductUnit;
+}
+
+const { product } = Astro.props;
+const relatedUnits = getRelatedProducts(product, 3);
+const isNew = product.status === 'Baru';
+
+const directWhatsappUrl = buildWhatsAppUrl(
+  `Halo Tim Penjualan ${siteConfig.legalName}, saya tertarik dengan unit ${product.name} (${product.unitClass}, kondisi ${product.status}). Mohon informasi ketersediaan serta penawaran harga beli atau sewanya.`
+);
+
+const productStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: product.name,
+  category: product.categoryLabel,
+  description: product.overview,
+  image: new URL(product.image, siteConfig.siteUrl).toString(),
+  itemCondition: isNew
+    ? 'https://schema.org/NewCondition'
+    : 'https://schema.org/UsedCondition',
+  brand: {
+    '@type': 'Organization',
+    name: siteConfig.legalName,
+  },
+};
+---
+
+<Base
+  title={`${product.name} (${product.status})`}
+  description={product.shortDescription}
+  ogImage={product.image}
+  structuredData={productStructuredData}
+>
+  <!-- Bar jejak halaman di atas konten detail -->
+  <div class="border-b border-border-light bg-surface-white">
+    <div class="container-wide py-3.5">
+      <nav aria-label="Jejak halaman" class="text-xs font-semibold uppercase tracking-wider text-steel-gray">
+        <ol class="m-0 flex list-none flex-wrap items-center gap-2 p-0">
+          <li><a href="/" class="text-steel-gray hover:text-steel-950">Beranda</a></li>
+          <li aria-hidden="true">/</li>
+          <li><a href="/produk" class="text-steel-gray hover:text-steel-950">Produk</a></li>
+          <li aria-hidden="true">/</li>
+          <li>
+            <a
+              href={`/produk?kategori=${product.category}`}
+              class="text-steel-gray hover:text-steel-950"
+            >
+              {product.categoryLabel}
+            </a>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" class="text-steel-950">{product.name}</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Bagian atas: Galeri gambar + ringkasan spesifikasi dan tombol aksi -->
+  <section class="section-pad-sm bg-surface-warm">
+    <div class="container-wide">
+      <div class="grid gap-8 lg:grid-cols-[1.15fr_0.95fr] lg:items-start lg:gap-12">
+        <!-- Galeri gambar interaktif -->
+        <div data-product-gallery class="space-y-3">
+          <figure class="m-0 overflow-hidden rounded-[4px] border border-border-light bg-steel-950">
+            <div class="cut-corner-tr relative aspect-[16/10] w-full overflow-hidden bg-steel-950">
+              <img
+                data-gallery-main
+                src={product.gallery[0].src}
+                alt={product.gallery[0].alt}
+                width="800"
+                height="600"
+                fetchpriority="high"
+                decoding="async"
+                class="h-full w-full object-cover"
+              />
+              <span
+                class:list={[
+                  'absolute top-4 left-4 px-3.5 py-1 font-display text-xs font-bold uppercase tracking-wider',
+                  isNew
+                    ? 'bg-safety text-steel-950'
+                    : 'border border-white/25 bg-steel-950 text-white',
+                ]}
+              >
+                Kondisi: {product.status}
+              </span>
+            </div>
+            <figcaption
+              data-gallery-caption
+              class="border-t border-white/15 bg-steel-950 px-4 py-3 text-xs font-medium text-steel-muted"
+            >
+              {product.gallery[0].caption}
+            </figcaption>
+          </figure>
+
+          <!-- Thumbnail pilihan sudut pandang -->
+          <div class="grid grid-cols-3 gap-3" role="group" aria-label="Pilih tampilan gambar unit">
+            {product.gallery.map((item, idx) => (
+              <button
+                type="button"
+                data-gallery-thumb
+                data-src={item.src}
+                data-alt={item.alt}
+                data-caption={item.caption}
+                data-active={idx === 0 ? 'true' : 'false'}
+                aria-pressed={idx === 0 ? 'true' : 'false'}
+                aria-label={`Tampilkan gambar: ${item.caption}`}
+                class="gallery-thumb overflow-hidden rounded-[4px] border-2 border-border-light bg-steel-950 p-0 text-left transition-all"
+              >
+                <div class="aspect-[16/10] w-full overflow-hidden">
+                  <img
+                    src={item.src}
+                    alt=""
+                    width="320"
+                    height="200"
+                    loading="lazy"
+                    class="h-full w-full object-cover"
+                  />
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Panel informasi utama unit -->
+        <div class="rounded-[4px] border border-border-light bg-surface-white p-6 shadow-sm sm:p-8">
+          <div class="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider">
+            <span class="bg-surface-warm px-2.5 py-1 text-steel-950">{product.categoryLabel}</span>
+            <span class="bg-surface-warm px-2.5 py-1 text-steel-gray">{product.unitClass}</span>
+            <span class="bg-steel-950 px-2.5 py-1 text-safety">
+              Tersedia: {product.options.join(' & ')}
+            </span>
+          </div>
+
+          <h1 class="mt-4 text-steel-950">
+            {product.name}
+          </h1>
+
+          <p class="mt-3 text-base leading-relaxed text-steel-gray">
+            {product.overview}
+          </p>
+
+          <!-- Ringkasan tiga spesifikasi utama -->
+          <dl class="m-0 mt-6 grid grid-cols-3 gap-3 border-t border-b border-border-light py-4">
+            {product.keySpecs.map((spec) => (
+              <div>
+                <dt class="text-xs font-semibold uppercase tracking-wide text-steel-gray">
+                  {spec.label}
+                </dt>
+                <dd class="m-0 mt-1 font-display text-xl font-bold text-steel-950">
+                  {spec.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          <div class="mt-5 flex flex-wrap items-center justify-between gap-2 rounded-[4px] bg-surface-warm px-4 py-3.5">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wide text-steel-gray">
+                Penawaran Harga
+              </p>
+              <p class="font-display text-xl font-bold uppercase text-steel-950">
+                {product.priceNote}
+              </p>
+            </div>
+            <p class="text-xs text-steel-gray">
+              Inspeksi fisik tersedia di yard Pulogadung
+            </p>
+          </div>
+
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+            <Button
+              href="#form-penawaran"
+              variant="primary"
+              icon="arrow-right"
+              class="flex-1 justify-center"
+            >
+              Minta Penawaran Unit Ini
+            </Button>
+            <Button
+              href={directWhatsappUrl}
+              external={true}
+              variant="dark"
+              icon="whatsapp"
+              iconPosition="left"
+              class="flex-1 justify-center"
+            >
+              Chat Tim Penjualan
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabel spesifikasi teknis, kegunaan, kelengkapan, dan opsi beli/sewa -->
+  <section class="section-pad bg-surface-white">
+    <div class="container-wide">
+      <div class="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+        <!-- Tabel spesifikasi -->
+        <div>
+          <p class="section-kicker section-kicker-light">Data Teknis</p>
+          <h2 class="text-steel-950">Spesifikasi Lengkap Unit</h2>
+
+          <div class="mt-6 overflow-x-auto rounded-[4px] border border-border-light">
+            <table class="w-full border-collapse text-left text-sm">
+              <thead>
+                <tr class="bg-steel-950 text-white">
+                  <th scope="col" class="px-5 py-3.5 font-display text-base font-bold uppercase tracking-wide">
+                    Parameter Teknis
+                  </th>
+                  <th scope="col" class="px-5 py-3.5 font-display text-base font-bold uppercase tracking-wide">
+                    Keterangan
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-border-light">
+                {product.fullSpecs.map((spec, idx) => (
+                  <tr class={idx % 2 === 0 ? 'bg-surface-white' : 'bg-surface-warm/65'}>
+                    <th scope="row" class="px-5 py-3.5 font-semibold text-steel-950">
+                      {spec.label}
+                    </th>
+                    <td class="px-5 py-3.5 text-steel-gray">
+                      {spec.value}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Kegunaan, kelengkapan, dan opsi beli/sewa -->
+        <div class="space-y-6">
+          <div class="rounded-[4px] border border-border-light bg-surface-warm p-6">
+            <h2 class="text-2xl text-steel-950">Kegunaan di Lapangan</h2>
+            <ul class="m-0 mt-4 list-none space-y-2.5 p-0 text-sm text-steel-gray">
+              {product.applications.map((item) => (
+                <li class="flex items-start gap-2.5">
+                  <Icon name="check" size={16} class="mt-1 shrink-0 text-safety-dark" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="rounded-[4px] border border-border-light bg-surface-warm p-6">
+            <h2 class="text-2xl text-steel-950">Kelengkapan Unit</h2>
+            <ul class="m-0 mt-4 list-none space-y-2.5 p-0 text-sm text-steel-gray">
+              {product.includedEquipment.map((item) => (
+                <li class="flex items-start gap-2.5">
+                  <Icon name="wrench" size={15} class="mt-1 shrink-0 text-steel-950" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="rounded-[4px] border-l-4 border-safety bg-steel-950 p-6 text-white">
+            <h2 class="text-2xl text-white">Opsi Pengadaan: Beli atau Sewa</h2>
+            <p class="mt-2 text-sm leading-relaxed text-steel-muted">
+              Unit ini tersedia untuk pembelian tunai maupun bertahap, serta penyewaan proyek jangka pendek dan panjang lengkap dengan jadwal perawatan berkala.
+            </p>
+            <div class="mt-4">
+              <a
+                href="/layanan#perbandingan-beli-sewa"
+                class="inline-flex min-h-[44px] items-center gap-2 font-display text-sm font-bold uppercase tracking-wide text-safety hover:underline"
+              >
+                <span>Bandingkan Skema Beli dan Sewa</span>
+                <Icon name="arrow-right" size={15} />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Formulir permintaan penawaran yang sudah terisi otomatis nama unit -->
+  <section class="section-pad bg-surface-warm">
+    <div class="container-wide">
+      <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+        <div class="space-y-5">
+          <p class="section-kicker section-kicker-light">Konsultasi Pengadaan</p>
+          <h2 class="text-steel-950">
+            Minta Penawaran untuk {product.name}
+          </h2>
+          <p class="text-base leading-relaxed text-steel-gray">
+            Nama unit sudah terisi otomatis pada formulir di samping. Lengkapi lokasi proyek serta perkiraan jadwal pemakaian agar tim kami dapat menghitung estimasi pengiriman dan ketersediaan attachment.
+          </p>
+
+          <div class="rounded-[4px] border border-border-light bg-surface-white p-5">
+            <p class="font-display text-sm font-bold uppercase tracking-wider text-steel-950">
+              Jadwal Kunjungan Inspeksi Unit
+            </p>
+            <p class="mt-1.5 text-sm text-steel-gray">
+              {siteConfig.address.full}
+            </p>
+            <p class="mt-2 text-sm font-semibold text-steel-950">
+              {siteConfig.hours.label}
+            </p>
+          </div>
+        </div>
+
+        <QuoteForm
+          idPrefix="detail"
+          defaultUnit={`${product.name} (${product.status})`}
+          defaultNeed="Beli"
+          heading={`Penawaran ${product.name}`}
+          subtitle="Pilih opsi Beli atau Sewa, lalu kirim rincian kebutuhan Anda lewat WhatsApp atau Email."
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Unit terkait -->
+  <section aria-labelledby="terkait-heading" class="section-pad bg-surface-white">
+    <div class="container-wide">
+      <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <p class="section-kicker section-kicker-light">Pilihan Lainnya</p>
+          <h2 id="terkait-heading" class="text-steel-950">Unit Terkait Lainnya</h2>
+        </div>
+        <Button href="/produk" variant="outline-dark" size="sm" icon="arrow-right">
+          Kembali ke Semua Unit
+        </Button>
+      </div>
+
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {relatedUnits.map((item) => (
+          <ProductCard product={item} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import '@/scripts/product-gallery';
+  </script>
+</Base>
+
+<style>
+  .gallery-thumb[data-active='true'] {
+    border-color: var(--color-safety);
+    box-shadow: 0 0 0 2px var(--color-steel-950);
+  }
+
+  .gallery-thumb[data-active='false'] {
+    opacity: 0.72;
+  }
+
+  .gallery-thumb[data-active='false']:hover,
+  .gallery-thumb[data-active='false']:focus-visible {
+    opacity: 1;
+    border-color: var(--color-steel-950);
+  }
+</style>

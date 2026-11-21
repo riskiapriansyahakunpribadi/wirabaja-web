@@ -1,0 +1,17 @@
+# Dependensi paket dan hasil build
+node_modules/
+dist/
+.astro/
+.vercel/
+
+# Berkas lingkungan dan rahasia lokal
+.env
+.env.*
+!.env.example
+
+# Berkas sistem operasi dan log
+.DS_Store
+Thumbs.db
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*

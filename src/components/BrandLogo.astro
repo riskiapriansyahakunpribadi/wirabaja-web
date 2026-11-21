@@ -1,0 +1,92 @@
+---
+interface Props {
+  variant?: 'dark' | 'light';
+  class?: string;
+}
+
+/*
+ * UBAH: gunakan variant="dark" di atas latar biru tua (header dan footer)
+ *       atau variant="light" di atas latar terang.
+ * EFEK: warna garis lambang dan teks otomatis menyesuaikan kontras latar.
+ * CARA: pasang prop <BrandLogo variant="dark" /> pada komponen Astro.
+ */
+const { variant = 'dark', class: className = '' } = Astro.props;
+
+const strokePrimary = variant === 'dark' ? '#FFFFFF' : '#0B1F3A';
+const textPrimary = variant === 'dark' ? '#FFFFFF' : '#0B1F3A';
+const textSecondary = variant === 'dark' ? '#CBD5E1' : '#4A596D';
+const jointCenter = '#0B1F3A';
+const mountainOpacity = variant === 'dark' ? '0.78' : '0.72';
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 272 64"
+  width="220"
+  height="52"
+  class={`logo-svg h-10 w-auto sm:h-11 ${className}`}
+  aria-hidden="true"
+  focusable="false"
+>
+  <g>
+    <path
+      class="logo-hex"
+      d="M 32 4 L 48.5 13 L 56.5 21.5 L 56.5 45.5 L 32 60 L 7.5 45.5 L 7.5 18.5 Z"
+      fill="none"
+      stroke={strokePrimary}
+      stroke-width="3.2"
+      stroke-linejoin="miter"
+    />
+    <path d="M 49.5 10.2 L 59.2 20 L 56.5 22 L 47.4 12.8 Z" fill="#FFB400" />
+    <path d="M 13.5 19.5 L 19 19.5 L 25.2 35.4 L 20.2 37.2 Z" fill={strokePrimary} />
+    <path d="M 21 35 L 29.8 22.5 L 33.4 24.4 L 24.8 37.2 Z" fill={strokePrimary} />
+    <path d="M 43 35 L 34.2 22.5 L 30.6 24.4 L 39.2 37.2 Z" fill={strokePrimary} />
+    <path d="M 50.5 19.5 L 45 19.5 L 38.8 35.4 L 43.8 37.2 Z" fill={strokePrimary} />
+    <g class="logo-joint">
+      <circle cx="22.6" cy="36.2" r="3.5" fill="#FFB400" />
+      <circle cx="22.6" cy="36.2" r="1.3" fill={jointCenter} />
+      <circle cx="41.4" cy="36.2" r="3.5" fill="#FFB400" />
+      <circle cx="41.4" cy="36.2" r="1.3" fill={jointCenter} />
+      <circle cx="32" cy="23.8" r="2.2" fill="#FFB400" />
+    </g>
+    <path
+      class="logo-tooth"
+      d="M 29.2 36.5 L 34.8 36.5 L 33.4 42.4 L 32 44.2 L 30.6 42.4 Z"
+      fill="#FFB400"
+    />
+    <path
+      d="M 16 49 L 22.5 45.2 L 28 49.4 L 32 47.2 L 36 49.4 L 41.5 45.2 L 48 49"
+      fill="none"
+      stroke={strokePrimary}
+      stroke-width="1.6"
+      stroke-linecap="square"
+      stroke-linejoin="miter"
+      opacity={mountainOpacity}
+    />
+  </g>
+  <g>
+    <text
+      x="74"
+      y="36"
+      fill={textPrimary}
+      font-family="'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif"
+      font-size="31"
+      font-weight="800"
+      letter-spacing="2.2"
+    >
+      WIRABAJA
+    </text>
+    <rect x="74" y="45" width="18" height="2.6" fill="#FFB400" />
+    <text
+      x="98"
+      y="50"
+      fill={textSecondary}
+      font-family="'Public Sans', 'Segoe UI', Arial, sans-serif"
+      font-size="11.2"
+      font-weight="600"
+      letter-spacing="2.4"
+    >
+      MESIN NUSANTARA
+    </text>
+  </g>
+</svg>

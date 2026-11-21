@@ -1,0 +1,78 @@
+---
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'primary' | 'dark' | 'outline-light' | 'outline-dark';
+  size?: 'md' | 'sm';
+  icon?: IconName;
+  iconPosition?: 'left' | 'right';
+  external?: boolean;
+  pulseOnce?: boolean;
+  magnetic?: boolean;
+  id?: string;
+  ariaLabel?: string;
+  class?: string;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  size = 'md',
+  icon,
+  iconPosition = 'right',
+  external = false,
+  pulseOnce = false,
+  magnetic = false,
+  id,
+  ariaLabel,
+  class: className = '',
+} = Astro.props;
+
+const variantClass = {
+  primary: 'btn-primary',
+  dark: 'btn-dark',
+  'outline-light': 'btn-outline-light',
+  'outline-dark': 'btn-outline-dark',
+}[variant];
+
+const sizeClass = size === 'sm' ? 'btn-sm' : '';
+const pulseClass = pulseOnce ? 'btn-pulse-once' : '';
+const combinedClass = ['btn', variantClass, sizeClass, pulseClass, className]
+  .filter(Boolean)
+  .join(' ');
+
+const isExternal = external || Boolean(href && /^https?:\/\//i.test(href));
+---
+
+{href ? (
+  <a
+    id={id}
+    href={href}
+    class={combinedClass}
+    aria-label={ariaLabel}
+    target={isExternal ? '_blank' : undefined}
+    rel={isExternal ? 'noopener noreferrer' : undefined}
+    data-btn-ripple="true"
+    data-magnetic={magnetic ? 'true' : undefined}
+  >
+    {icon && iconPosition === 'left' && <Icon name={icon} size={18} class="btn-icon" />}
+    <span><slot /></span>
+    {icon && iconPosition === 'right' && <Icon name={icon} size={18} class="btn-icon" />}
+  </a>
+) : (
+  <button
+    id={id}
+    type={type}
+    class={combinedClass}
+    aria-label={ariaLabel}
+    data-btn-ripple="true"
+    data-magnetic={magnetic ? 'true' : undefined}
+  >
+    {icon && iconPosition === 'left' && <Icon name={icon} size={18} class="btn-icon" />}
+    <span><slot /></span>
+    {icon && iconPosition === 'right' && <Icon name={icon} size={18} class="btn-icon" />}
+  </button>
+)}

@@ -1,0 +1,92 @@
+---
+import { buildMailtoUrl, buildWhatsAppUrl, siteConfig } from '@/config/site';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  heading?: string;
+  description?: string;
+  whatsappMessage?: string;
+  emailSubject?: string;
+}
+
+/*
+ * UBAH: judul, teks penjelas, pesan WhatsApp bawaan, dan subjek email lewat props komponen ini.
+ * EFEK: mengubah blok ajakan berwarna kuning di bagian bawah Beranda dan halaman lain yang memakainya.
+ * CARA: kirim prop seperti <CtaBanner heading="Butuh Unit untuk Proyek Bulan Ini?" /> saat memanggil komponen.
+ */
+const {
+  heading = 'Siap Menyiapkan Unit untuk Proyek Anda?',
+  description = 'Sampaikan jenis pekerjaan, kapasitas alat yang dibutuhkan, serta lokasi pengiriman. Tim penjualan kami menyiapkan spesifikasi dan estimasi pengadaan sesuai jadwal lapangan Anda.',
+  whatsappMessage = siteConfig.contact.defaultWhatsappMessage,
+  emailSubject = 'Permintaan Penawaran Alat Berat PT Wirabaja Mesin Nusantara',
+} = Astro.props;
+
+const whatsappUrl = buildWhatsAppUrl(whatsappMessage);
+const mailtoUrl = buildMailtoUrl(
+  emailSubject,
+  `Halo Tim Penjualan ${siteConfig.legalName},\n\nSaya ingin meminta penawaran alat berat dengan rincian berikut:\n- Nama:\n- Perusahaan:\n- Jenis kebutuhan (Beli / Sewa / Servis / Suku Cadang):\n- Unit yang diminati:\n- Lokasi proyek:\n\nTerima kasih.`
+);
+---
+
+<section aria-labelledby="cta-banner-heading" class="relative overflow-hidden bg-safety text-steel-950">
+  <!-- Potongan sudut baja gelap di sisi kanan sebagai pengikat motif diagonal -->
+  <div
+    class="pointer-events-none absolute top-0 right-0 hidden h-full w-[26%] bg-steel-950/10 lg:block"
+    style="clip-path: polygon(24% 0, 100% 0, 100% 100%, 0 100%);"
+    aria-hidden="true"
+  ></div>
+
+  <div class="container-wide relative z-10 py-14 lg:py-16">
+    <div class="grid items-center gap-8 lg:grid-cols-[1.35fr_auto]">
+      <div class="max-w-2xl space-y-3">
+        <p class="font-display text-sm font-bold uppercase tracking-wider text-steel-950">
+          {siteConfig.hours.label}
+        </p>
+        <h2 id="cta-banner-heading" class="text-steel-950">
+          {heading}
+        </h2>
+        <p class="text-base leading-relaxed text-steel-950/90">
+          {description}
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:flex-col xl:flex-row">
+        <Button
+          href={whatsappUrl}
+          external={true}
+          variant="dark"
+          icon="whatsapp"
+          iconPosition="left"
+          magnetic={true}
+        >
+          Chat Tim Penjualan
+        </Button>
+
+        <Button
+          href={mailtoUrl}
+          variant="outline-dark"
+          icon="mail"
+          iconPosition="left"
+        >
+          Kirim Email Penawaran
+        </Button>
+      </div>
+    </div>
+
+    <div class="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-steel-950/20 pt-5 text-sm font-semibold text-steel-950">
+      <span class="inline-flex items-center gap-2">
+        <Icon name="phone" size={16} />
+        <span>{siteConfig.contact.whatsappDisplay}</span>
+      </span>
+      <span class="inline-flex items-center gap-2">
+        <Icon name="mail" size={16} />
+        <span>{siteConfig.contact.email}</span>
+      </span>
+      <span class="inline-flex items-center gap-2">
+        <Icon name="map-pin" size={16} />
+        <span>{siteConfig.address.short}</span>
+      </span>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+---
+interface Props {
+  as?: 'div' | 'section' | 'article' | 'li';
+  direction?: 'up' | 'left' | 'right';
+  delay?: number;
+  class?: string;
+}
+
+const {
+  as = 'div',
+  direction = 'up',
+  delay = 0,
+  class: className = '',
+} = Astro.props;
+
+const Tag = as;
+const styleValue = delay > 0 ? `--reveal-delay: ${delay}ms;` : undefined;
+---
+
+<Tag
+  class={className}
+  data-reveal={direction === 'up' ? '' : direction}
+  style={styleValue}
+>
+  <slot />
+</Tag>

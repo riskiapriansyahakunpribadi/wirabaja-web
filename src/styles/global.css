@@ -1,0 +1,824 @@
+/* Font self-host dari @fontsource agar tidak ada permintaan ke CDN luar */
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/barlow-condensed/700.css';
+@import '@fontsource/barlow-condensed/800.css';
+@import '@fontsource/public-sans/400.css';
+@import '@fontsource/public-sans/500.css';
+@import '@fontsource/public-sans/600.css';
+@import '@fontsource/public-sans/700.css';
+@import 'tailwindcss';
+
+/*
+ * UBAH: warna utama, warna aksen, dan keluarga huruf di blok @theme ini.
+ * EFEK: seluruh warna latar, tombol, teks, garis penanda, dan judul di semua halaman ikut berubah.
+ * CARA: ganti kode hex (misalnya #0B1F3A atau #FFB400) sambil menjaga rasio kontras teks minimal 4.5:1.
+ */
+@theme {
+  --color-steel-980: #071528;
+  --color-steel-950: #0B1F3A;
+  --color-steel-900: #112A4D;
+  --color-steel-800: #1C3A63;
+  --color-steel-gray: #4A596D;
+  --color-steel-muted: #CBD5E1;
+  --color-surface-warm: #F4F2EE;
+  --color-surface-white: #FFFFFF;
+  --color-surface-tint: #EAE7E0;
+  --color-border-light: #D5D2CB;
+  --color-border-input: #717F90;
+  --color-border-dark: rgba(255, 255, 255, 0.16);
+  --color-safety: #FFB400;
+  --color-safety-hover: #E5A200;
+  --color-safety-dark: #855A00;
+  --color-error: #B42318;
+  --color-error-bg: #FEF3F2;
+  --color-success: #0F6A3B;
+  --color-success-bg: #ECFDF3;
+
+  --font-display: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
+  --font-body: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/*
+ * UBAH: token ukuran huruf, kurva animasi, dan radius sudut industri.
+ * EFEK: mengatur skala judul responsif, kecepatan gerak, dan ketegasan sudut kartu.
+ * CARA: sesuaikan angka clamp() atau durasi (ms) dengan mempertahankan satu kurva easing yang seragam.
+ */
+:root {
+  --ease-industrial: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 180ms;
+  --duration-base: 320ms;
+  --duration-slow: 540ms;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+
+  --text-hero: clamp(2.5rem, 1.8rem + 3.2vw, 4.65rem);
+  --text-h1: clamp(2.125rem, 1.65rem + 2.1vw, 3.4rem);
+  --text-h2: clamp(1.75rem, 1.38rem + 1.5vw, 2.65rem);
+  --text-h3: clamp(1.25rem, 1.1rem + 0.65vw, 1.6rem);
+  --text-body-lg: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --text-body: 1rem;
+  --text-sm: 0.875rem;
+
+  --header-height: 76px;
+  --topbar-height: 38px;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    color: var(--color-steel-950);
+    background-color: var(--color-surface-warm);
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: clip;
+    line-height: 1.6;
+    font-size: var(--text-body);
+    background-color: var(--color-surface-warm);
+    color: var(--color-steel-950);
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: 0.01em;
+    margin: 0;
+  }
+
+  h1 {
+    font-size: var(--text-h1);
+  }
+
+  h2 {
+    font-size: var(--text-h2);
+  }
+
+  h3 {
+    font-size: var(--text-h3);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a,
+  button,
+  summary,
+  select,
+  input[type='submit'],
+  input[type='button'] {
+    cursor: pointer;
+  }
+
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* Fokus keyboard harus jelas pada latar terang maupun gelap tanpa menghapus outline */
+  :focus-visible {
+    outline: 2px solid var(--color-safety);
+    outline-offset: 3px;
+  }
+
+  .surface-light :focus-visible,
+  .bg-surface-warm :focus-visible,
+  .bg-surface-white :focus-visible {
+    outline: 2px solid var(--color-steel-950);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(255, 180, 0, 0.55);
+  }
+
+  .bg-safety :focus-visible,
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--color-steel-950);
+    outline-offset: 3px;
+  }
+}
+
+/* Tautan lompat aksesibilitas untuk pengguna papan ketik */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--color-safety);
+  color: var(--color-steel-950);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transform: translateY(-160%);
+  transition: transform var(--duration-fast) var(--ease-industrial);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* Wadah dan jarak bagian */
+.container-wide {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 3vw, 2.5rem);
+}
+
+.section-pad {
+  padding-block: clamp(3.5rem, 6vw, 6.25rem);
+}
+
+.section-pad-sm {
+  padding-block: clamp(2.25rem, 4vw, 3.75rem);
+}
+
+/* Penanda judul: garis kuning tebal pendek khas identitas Wirabaja */
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.section-kicker::before {
+  content: '';
+  display: inline-block;
+  width: 34px;
+  height: 4px;
+  background-color: var(--color-safety);
+  transform: skewX(-14deg);
+  flex-shrink: 0;
+}
+
+.section-kicker-light {
+  color: var(--color-steel-950);
+}
+
+.section-kicker-dark {
+  color: var(--color-safety);
+}
+
+/* Motif potongan sudut diagonal 14 derajat untuk gambar, panel, dan pembatas */
+.cut-corner-tr {
+  clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
+}
+
+.cut-corner-bl {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+}
+
+.cut-corner-hero {
+  clip-path: polygon(6% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+@media (max-width: 1023px) {
+  .cut-corner-hero {
+    clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%);
+  }
+}
+
+.diagonal-divider-top {
+  position: relative;
+}
+
+.diagonal-divider-top::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: clamp(20px, 3vw, 40px);
+  background-color: var(--divider-from, var(--color-surface-warm));
+  clip-path: polygon(0 0, 100% 0, 100% 12%, 0 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Sistem tombol: sapuan diagonal dari kiri, gerak ikon, efek tekan, dan area sentuh minimal 48px */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 2px solid transparent;
+  overflow: hidden;
+  isolation: isolate;
+  user-select: none;
+  transition:
+    transform var(--duration-fast) var(--ease-industrial),
+    color var(--duration-fast) var(--ease-industrial),
+    border-color var(--duration-fast) var(--ease-industrial),
+    box-shadow var(--duration-fast) var(--ease-industrial);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: -4px -20%;
+  z-index: -1;
+  transform: translateX(-108%) skewX(-14deg);
+  transition: transform var(--duration-base) var(--ease-industrial);
+}
+
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: translateX(0) skewX(-14deg);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn .btn-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  transition: transform var(--duration-fast) var(--ease-industrial);
+}
+
+.btn:hover .btn-icon,
+.btn:focus-visible .btn-icon {
+  transform: translateX(4px);
+}
+
+/* Tombol utama dengan potongan sudut diagonal khas alat berat */
+.btn-primary {
+  background-color: var(--color-safety);
+  color: var(--color-steel-950);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  border-radius: var(--radius-sm);
+}
+
+.btn-primary::before {
+  background-color: var(--color-steel-950);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  color: var(--color-surface-white);
+}
+
+.btn-primary:active {
+  background-color: var(--color-safety-hover);
+}
+
+/* Tombol gelap solid untuk kontras tinggi di atas blok kuning atau latar terang */
+.btn-dark {
+  background-color: var(--color-steel-950);
+  color: var(--color-surface-white);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  border-radius: var(--radius-sm);
+}
+
+.btn-dark::before {
+  background-color: var(--color-steel-800);
+}
+
+.btn-dark:active {
+  background-color: var(--color-steel-980);
+}
+
+/* Tombol sekunder di atas latar gelap */
+.btn-outline-light {
+  background-color: transparent;
+  color: var(--color-surface-white);
+  border-color: rgba(255, 255, 255, 0.72);
+  border-radius: var(--radius-md);
+}
+
+.btn-outline-light::before {
+  background-color: var(--color-surface-white);
+}
+
+.btn-outline-light:hover,
+.btn-outline-light:focus-visible {
+  color: var(--color-steel-950);
+  border-color: var(--color-surface-white);
+}
+
+/* Tombol sekunder di atas latar terang */
+.btn-outline-dark {
+  background-color: transparent;
+  color: var(--color-steel-950);
+  border-color: var(--color-steel-950);
+  border-radius: var(--radius-md);
+}
+
+.btn-outline-dark::before {
+  background-color: var(--color-steel-950);
+}
+
+.btn-outline-dark:hover,
+.btn-outline-dark:focus-visible {
+  color: var(--color-surface-white);
+}
+
+.btn-sm {
+  min-height: 44px;
+  padding: 0.55rem 1.15rem;
+  font-size: 0.95rem;
+}
+
+/* Riak halus dari titik klik (dibuat lewat skrip interaksi) */
+.btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.32);
+  transform: scale(0);
+  opacity: 0.85;
+  pointer-events: none;
+  animation: btn-ripple-expand 520ms var(--ease-industrial) forwards;
+}
+
+@keyframes btn-ripple-expand {
+  to {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+/* Denyut halus satu kali pada tombol CTA header setelah halaman selesai dimuat */
+.btn-pulse-once {
+  animation: cta-pulse-once 760ms var(--ease-industrial) 650ms 1 both;
+}
+
+@keyframes cta-pulse-once {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 180, 0, 0.65);
+  }
+  65% {
+    box-shadow: 0 0 0 11px rgba(255, 180, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 180, 0, 0);
+  }
+}
+
+/* Animasi logo saat dimuat dan saat diarahkan kursor */
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.logo-svg .logo-hex {
+  stroke-dasharray: 210;
+  stroke-dashoffset: 210;
+  animation: logo-hex-draw 780ms var(--ease-industrial) 100ms forwards;
+}
+
+.logo-svg .logo-joint {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: logo-joint-glow 620ms var(--ease-industrial) 760ms 1 both;
+  transition: transform var(--duration-fast) var(--ease-industrial);
+}
+
+.logo-svg .logo-tooth {
+  transition: transform var(--duration-fast) var(--ease-industrial);
+}
+
+.logo-link:hover .logo-joint,
+.logo-link:focus-visible .logo-joint {
+  transform: scale(1.18);
+}
+
+.logo-link:hover .logo-tooth,
+.logo-link:focus-visible .logo-tooth {
+  transform: translateY(1.6px);
+}
+
+@keyframes logo-hex-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes logo-joint-glow {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.8);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.24);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Tautan navigasi: garis kuning meluncur dari kiri */
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.25rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-industrial);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  height: 3px;
+  background-color: var(--color-safety);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--duration-base) var(--ease-industrial);
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after,
+.nav-link[aria-current='page']::after {
+  transform: scaleX(1);
+}
+
+/* Variasi kartu sesuai hierarki isi */
+.card-product {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition:
+    transform var(--duration-base) var(--ease-industrial),
+    border-color var(--duration-base) var(--ease-industrial),
+    box-shadow var(--duration-base) var(--ease-industrial);
+}
+
+.card-product:hover,
+.card-product:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--color-steel-950);
+  box-shadow: 0 14px 32px rgba(11, 31, 58, 0.1);
+}
+
+.card-product-media {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-steel-950);
+}
+
+.card-product-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-industrial);
+}
+
+.card-product:hover .card-product-media img,
+.card-product:focus-within .card-product-media img {
+  transform: scale(1.045);
+}
+
+.card-product-title-line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  margin-top: 0.55rem;
+  background-color: var(--color-border-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-product-title-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-safety);
+  transform: scaleX(0.24);
+  transform-origin: left center;
+  transition: transform var(--duration-base) var(--ease-industrial);
+}
+
+.card-product:hover .card-product-title-line::after,
+.card-product:focus-within .card-product-title-line::after {
+  transform: scaleX(1);
+}
+
+.card-product-action {
+  transition: transform var(--duration-base) var(--ease-industrial);
+}
+
+.card-product:hover .card-product-action,
+.card-product:focus-within .card-product-action {
+  transform: translateY(-2px);
+}
+
+/* Kartu unggulan yang lebih besar pada daftar kategori dan layanan */
+.card-featured {
+  position: relative;
+  background-color: var(--color-steel-950);
+  color: var(--color-surface-white);
+  border-radius: var(--radius-md);
+  border-left: 5px solid var(--color-safety);
+  overflow: hidden;
+  transition: transform var(--duration-base) var(--ease-industrial);
+}
+
+.card-featured:hover,
+.card-featured:focus-within {
+  transform: translateY(-3px);
+}
+
+/* Kartu sektor dengan penanda samping tegas */
+.card-sector {
+  background-color: var(--color-surface-white);
+  border: 1px solid var(--color-border-light);
+  border-left: 4px solid var(--color-safety);
+  border-radius: var(--radius-sm);
+  padding: 1.4rem 1.5rem;
+  transition:
+    transform var(--duration-base) var(--ease-industrial),
+    border-color var(--duration-base) var(--ease-industrial);
+}
+
+.card-sector:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-steel-950);
+  border-left-color: var(--color-safety);
+}
+
+/* Animasi scroll reveal: hanya aktif menyembunyikan jika JavaScript siap */
+html.js-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity var(--duration-slow) var(--ease-industrial),
+    transform var(--duration-slow) var(--ease-industrial);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+html.js-ready [data-reveal='left'] {
+  transform: translateX(-22px);
+}
+
+html.js-ready [data-reveal='right'] {
+  transform: translateX(22px);
+}
+
+html.js-ready [data-reveal].is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Animasi muncul baris judul hero dari bawah dengan potongan */
+.hero-line-mask {
+  display: block;
+  overflow: hidden;
+}
+
+.hero-line-inner {
+  display: block;
+  animation: hero-line-rise 600ms var(--ease-industrial) var(--line-delay, 0ms) both;
+}
+
+@keyframes hero-line-rise {
+  from {
+    opacity: 0;
+    transform: translateY(105%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Garis penghubung alur proses yang tergambar saat terlihat */
+.process-connector-fill {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 760ms var(--ease-industrial);
+}
+
+.process-flow.is-visible .process-connector-fill {
+  transform: scaleX(1);
+}
+
+/* Formulir dengan label melayang dan umpan balik kontras tinggi */
+.field-group {
+  position: relative;
+}
+
+.field-input {
+  width: 100%;
+  min-height: 52px;
+  padding: 1.35rem 0.95rem 0.45rem;
+  background-color: var(--color-surface-white);
+  color: var(--color-steel-950);
+  border: 1.5px solid var(--color-border-input);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.4;
+  transition:
+    border-color var(--duration-fast) var(--ease-industrial),
+    box-shadow var(--duration-fast) var(--ease-industrial);
+}
+
+.field-input:focus {
+  border-color: var(--color-steel-950);
+  box-shadow: 0 0 0 3px rgba(255, 180, 0, 0.35);
+  outline: none;
+}
+
+.field-input[aria-invalid='true'] {
+  border-color: var(--color-error);
+  background-color: var(--color-error-bg);
+}
+
+.field-label {
+  position: absolute;
+  left: 0.95rem;
+  top: 0.95rem;
+  color: var(--color-steel-gray);
+  font-size: 0.95rem;
+  font-weight: 500;
+  pointer-events: none;
+  transform-origin: left top;
+  transition:
+    transform var(--duration-fast) var(--ease-industrial),
+    color var(--duration-fast) var(--ease-industrial);
+}
+
+.field-input:focus + .field-label,
+.field-input:not(:placeholder-shown) + .field-label,
+select.field-input + .field-label {
+  transform: translateY(-0.58rem) scale(0.78);
+  color: var(--color-steel-950);
+  font-weight: 700;
+}
+
+.field-error {
+  display: block;
+  min-height: 1.25rem;
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-error);
+}
+
+/* Kolom jebakan anti-spam yang disembunyikan dari pengunjung */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Transisi antarhalaman Astro View Transitions */
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+::view-transition-old(main-content) {
+  animation: page-fade-out 220ms var(--ease-industrial) both;
+}
+
+::view-transition-new(main-content) {
+  animation: page-fade-in 300ms var(--ease-industrial) both;
+}
+
+/* Hormati pengaturan pengguna yang menonaktifkan animasi */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html.js-ready [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .logo-svg .logo-hex {
+    stroke-dashoffset: 0 !important;
+  }
+
+  .process-connector-fill {
+    transform: scaleX(1) !important;
+  }
+
+  ::view-transition-old(main-content),
+  ::view-transition-new(main-content) {
+    animation: none !important;
+  }
+}

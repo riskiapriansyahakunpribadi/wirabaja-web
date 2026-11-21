@@ -1,0 +1,85 @@
+---
+import Base from '@/layouts/Base.astro';
+import Button from '@/components/Button.astro';
+import Icon from '@/components/Icon.astro';
+import { siteConfig } from '@/config/site';
+---
+
+<Base
+  title="Halaman Tidak Ditemukan"
+  description={`Halaman yang Anda tuju tidak tersedia di website ${siteConfig.legalName}.`}
+  noindex={true}
+>
+  <section
+    aria-labelledby="not-found-heading"
+    class="section-pad flex min-h-[70dvh] items-center bg-surface-warm"
+  >
+    <div class="container-wide">
+      <div class="mx-auto max-w-3xl overflow-hidden rounded-[4px] border border-border-light bg-surface-white shadow-sm">
+        <div class="grid md:grid-cols-[0.42fr_0.58fr]">
+          <!-- Panel nomor galat berpotongan diagonal -->
+          <div class="relative flex flex-col justify-between bg-steel-950 p-8 text-white">
+            <div class="inline-flex h-12 w-12 items-center justify-center rounded-[2px] bg-safety text-steel-950">
+              <Icon name="helmet" size={26} />
+            </div>
+
+            <div class="my-8">
+              <p class="font-display text-xs font-bold uppercase tracking-widest text-safety">
+                Kode Halaman
+              </p>
+              <p
+                class="font-display text-7xl font-extrabold leading-none tracking-tight text-white sm:text-8xl"
+                aria-hidden="true"
+              >
+                404
+              </p>
+            </div>
+
+            <p class="text-xs leading-relaxed text-steel-muted">
+              {siteConfig.legalName}
+            </p>
+          </div>
+
+          <!-- Penjelasan penyebab dan tombol arah kembali -->
+          <div class="flex flex-col justify-between p-8 sm:p-10">
+            <div>
+              <p class="section-kicker section-kicker-light">Alamat Tidak Tersedia</p>
+              <h1 id="not-found-heading" class="text-steel-950">
+                Halaman yang Anda Cari Tidak Ditemukan
+              </h1>
+              <p class="mt-4 text-base leading-relaxed text-steel-gray">
+                Alamat tautan mungkin sudah berubah, unit yang dicari telah diperbarui, atau terdapat kesalahan ketik pada alamat web. Gunakan tombol di bawah ini untuk melanjutkan pencarian unit maupun layanan kami.
+              </p>
+            </div>
+
+            <div class="mt-8 space-y-5">
+              <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Button href="/" variant="primary" icon="arrow-right">
+                  Kembali ke Beranda
+                </Button>
+                <Button href="/produk" variant="outline-dark" icon="bucket" iconPosition="left">
+                  Lihat Katalog Unit
+                </Button>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-border-light pt-4 text-sm">
+                <a
+                  href="/layanan"
+                  class="inline-flex min-h-[44px] items-center font-semibold text-steel-950 underline decoration-safety decoration-2 underline-offset-4 hover:text-safety-dark"
+                >
+                  Lihat Layanan Kami
+                </a>
+                <a
+                  href="/kontak"
+                  class="inline-flex min-h-[44px] items-center font-semibold text-steel-950 underline decoration-safety decoration-2 underline-offset-4 hover:text-safety-dark"
+                >
+                  Hubungi Tim Penjualan
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

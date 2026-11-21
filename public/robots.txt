@@ -1,0 +1,8 @@
+# UBAH: ganti alamat domain pada baris Sitemap di bawah sesuai domain produksi yang diatur di astro.config.mjs.
+# EFEK: membantu mesin pencari menemukan seluruh halaman aktif website secara otomatis.
+# CARA: ubah https://wirabaja.id dengan alamat domain resmi perusahaan sebelum publikasi.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://wirabaja.id/sitemap-index.xml
